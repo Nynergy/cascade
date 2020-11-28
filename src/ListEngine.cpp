@@ -7,13 +7,21 @@ ListEngine::~ListEngine() {
 }
 
 void ListEngine::init() {
-    createPanels();
+    try {
+        createPanels();
+    } catch(InvalidRatioException& e) {
+        throw InvalidRatioException(e.what());
+    }
 }
 
 void ListEngine::createPanels() {
-    std::vector<Section> sections = getSectionsFromList();
-    std::vector<Box> layout = generateLayoutFromSections(sections);
-    populatePanels(sections, layout);
+    try {
+        std::vector<Section> sections = getSectionsFromList();
+        std::vector<Box> layout = generateLayoutFromSections(sections);
+        populatePanels(sections, layout);
+    } catch(InvalidRatioException& e) {
+        throw InvalidRatioException(e.what());
+    }
 }
 
 std::vector<Section> ListEngine::getSectionsFromList() {
@@ -56,8 +64,7 @@ std::vector<Box> ListEngine::generateLayoutFromSections(std::vector<Section> sec
     try {
         layout = Layouts::customVLayout(layoutRatio, &layoutBounds);
     } catch(InvalidRatioException& e) {
-        // FIXME This is horrible
-        layout = Layouts::VSplit(&layoutBounds);
+        throw InvalidRatioException(e.what());
     }
 
     return layout;
@@ -113,8 +120,7 @@ void ListEngine::resizePanels() {
     try {
         layout = Layouts::customVLayout(layoutRatio, &layoutBounds);
     } catch(InvalidRatioException& e) {
-        // FIXME This is also horrible
-        layout = Layouts::VSplit(&layoutBounds);
+        throw InvalidRatioException(e.what());
     }
 
     int numPanels = (int)layout.size();

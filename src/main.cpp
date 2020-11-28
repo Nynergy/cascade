@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "ListEngine.hpp"
 
 int main() {
@@ -8,7 +10,17 @@ int main() {
     Config::getInstance().readFromConfigFile(configPath);
 
     ListEngine * engine = new ListEngine();
-    engine->init();
+
+    try {
+        engine->init();
+    } catch(InvalidRatioException& e) {
+        delete engine;
+        std::cerr << "*** ERROR IN ENGINE INITIALIZATION ***" << std::endl;
+        std::cerr << "InvalidRatioException: " << e.what() << std::endl;
+
+        return 1;
+    }
+
     engine->run();
 
     delete engine;
