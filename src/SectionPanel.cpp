@@ -17,15 +17,18 @@ void SectionPanel::drawPanel() {
 }
 
 void SectionPanel::drawTitleBar() {
-    int attr = combineAttributes(3, sectionColor,
-                                    getAttribute("reverse"),
-                                    getAttribute("bold"));
-    setAttributes(attr, win);
-
+    int barAttr = combineAttributes(3, sectionColor,
+                                       getAttribute("reverse"),
+                                       getAttribute("bold"));
+    setAttributes(barAttr, win);
     drawBar();
-    drawTitle();
+    unsetAttributes(barAttr, win);
 
-    unsetAttributes(attr, win);
+    int titleAttr = combineAttributes(2, sectionColor,
+                                         getAttribute("bold"));
+    setAttributes(titleAttr, win);
+    drawTitle();
+    unsetAttributes(titleAttr, win);
 }
 
 void SectionPanel::drawBar() {
@@ -37,7 +40,15 @@ void SectionPanel::drawTitle() {
     int midX, midY;
     CENTER(win, midX, midY);
     Point titlePoint(midX, 0);
-    drawCenteredStringAtPoint(title, titlePoint, win);
+
+    std::string wideTitle = widenTitle();
+    drawCenteredStringAtPoint(wideTitle, titlePoint, win);
+}
+
+std::string SectionPanel::widenTitle() {
+    std::string wideTitle = " " + title + " ";
+
+    return wideTitle;
 }
 
 void SectionPanel::drawItems() {

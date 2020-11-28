@@ -8,6 +8,7 @@ class ListEngine : public Engine {
 
 private:
     std::vector<SectionPanel *> panels;
+    std::string layoutRatio;
 
     void createPanels();
     std::vector<Section> getSectionsFromList();
@@ -18,6 +19,7 @@ private:
     Box generateLayoutBounds();
     void populatePanels(std::vector<Section> sections, std::vector<Box> layout);
     void renderPanels();
+    void resizePanels();
 
 public:
     ~ListEngine();

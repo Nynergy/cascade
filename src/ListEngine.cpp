@@ -50,11 +50,11 @@ std::vector<Box> ListEngine::generateLayoutFromSections(std::vector<Section> sec
         ratioString = ratioString + "1:";
     }
 
-    ratioString = removeTrailingColon(ratioString);
+    layoutRatio = removeTrailingColon(ratioString);
     Box layoutBounds = generateLayoutBounds();
     std::vector<Box> layout;
     try {
-        layout = Layouts::customVLayout(ratioString, &layoutBounds);
+        layout = Layouts::customVLayout(layoutRatio, &layoutBounds);
     } catch(InvalidRatioException& e) {
         // FIXME This is horrible
         layout = Layouts::VSplit(&layoutBounds);
@@ -87,6 +87,15 @@ void ListEngine::populatePanels(std::vector<Section> sections, std::vector<Box> 
 void ListEngine::run() {
     int key;
     while((key = getch()) != 'q') {
+        // Handle input first, then render panels
+        switch(key) {
+            case KEY_RESIZE:
+                resizePanels();
+                break;
+            default:
+                break;
+        }
+
         renderPanels();
     }
 }
@@ -94,5 +103,22 @@ void ListEngine::run() {
 void ListEngine::renderPanels() {
     for(SectionPanel * panel : panels) {
         panel->drawPanel();
+    }
+}
+
+void ListEngine::resizePanels() {
+    Box layoutBounds = generateLayoutBounds();
+    std::vector<Box> layout;
+
+    try {
+        layout = Layouts::customVLayout(layoutRatio, &layoutBounds);
+    } catch(InvalidRatioException& e) {
+        // FIXME This is also horrible
+        layout = Layouts::VSplit(&layoutBounds);
+    }
+
+    int numPanels = (int)layout.size();
+    for(int i = 0; i < numPanels; i++) {
+        panels[i]->resizePanel(layout[i]);
     }
 }

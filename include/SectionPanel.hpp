@@ -14,6 +14,7 @@ private:
     void drawTitleBar();
     void drawBar();
     void drawTitle();
+    std::string widenTitle();
     void drawItems();
     void drawItemWithOffset(std::string item, int offset);
 
