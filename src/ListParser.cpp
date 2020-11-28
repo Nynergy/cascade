@@ -1,7 +1,11 @@
 #include "ListParser.hpp"
 
 ListParser::ListParser(std::string listPath) {
-    fproc = new FileProcessor(listPath);
+    try {
+        fproc = new FileProcessor(listPath);
+    } catch(InvalidFileException& e) {
+        missingList = true;
+    }
 }
 
 ListParser::~ListParser() {
@@ -11,15 +15,28 @@ ListParser::~ListParser() {
 std::vector<Section> ListParser::parseList() {
     std::vector<Section> sections;
 
+    bool fileIsEmpty = true;
+    bool firstLine = true;
     std::string line;
     while(!(fproc->isEOF)) {
+        fileIsEmpty = false;
         line = fproc->poll();
-        if(isSectionTitle(line)) {
-            std::string sectionTitle = extractSectionTitle(line);
-            int sectionColorCode = extractColorCode(line);
-            Section section = parseSection(sectionTitle, sectionColorCode);
-            sections.push_back(section);
+        if(isSectionTitle(line) || firstLine) {
+            firstLine = false;
+            try {
+                std::string sectionTitle = extractSectionTitle(line);
+                int sectionColorCode = extractColorCode(line);
+                Section section = parseSection(sectionTitle, sectionColorCode);
+                sections.push_back(section);
+            } catch(InvalidFileException& e) {
+                throw InvalidFileException(e.what());
+            }
         }
+    }
+
+    if(fileIsEmpty) {
+        const char * message = "List file cannot be empty.";
+        throw InvalidFileException(message);
     }
 
     return sections;
@@ -34,16 +51,39 @@ bool ListParser::isSectionTitle(std::string line) {
 
 std::string ListParser::extractSectionTitle(std::string line) {
     size_t closingBrace = line.find(']');
+    if(closingBrace == std::string::npos) {
+        const char * message = "Section titles must be enclosed in braces (e.g. [Section Title]).";
+        throw InvalidFileException(message);
+    }
+
     std::string title = line.substr(1, closingBrace - 1);
 
     return title;
 }
 
 int ListParser::extractColorCode(std::string line) {
-    size_t colon = line.find(':');
+    // Remove title portion first, then check for colon and integer
+    size_t closingBrace = line.find(']');
+    line = line.substr(closingBrace);
+
+    size_t colon = line.find_last_of(':');
+    if(colon == std::string::npos) {
+        const char * message = "Section lines must have a colon (:) between the title and color code.";
+        throw InvalidFileException(message);
+    }
+
     std::string codeStr = line.substr(colon + 1);
     std::string trimStr = trimWhitespace(codeStr);
-    int code = stoi(trimStr);
+    int code;
+    try {
+        code = stoi(trimStr);
+    } catch(std::invalid_argument& e) {
+        const char * message = "Color code must be an integer.";
+        throw InvalidFileException(message);
+    } catch(std::out_of_range& e) {
+        const char * message = "Color code cannot be an exceedingly large number.";
+        throw InvalidFileException(message);
+    }
 
     return code;
 }

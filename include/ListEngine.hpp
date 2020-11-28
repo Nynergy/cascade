@@ -7,6 +7,7 @@
 class ListEngine : public Engine {
 
 private:
+    std::string listPath;
     std::vector<SectionPanel *> panels;
     std::string layoutRatio;
 
@@ -14,6 +15,7 @@ private:
     std::vector<Section> getSectionsFromList();
     std::string convertToAbsolutePath(std::string path);
     bool isRelativePath(std::string path);
+    std::vector<Section> defaultList();
     std::vector<Box> generateLayoutFromSections(std::vector<Section> sections);
     std::string removeTrailingColon(std::string ratioString);
     Box generateLayoutBounds();
@@ -22,6 +24,7 @@ private:
     void resizePanels();
 
 public:
+    ListEngine(std::string listPathIn);
     ~ListEngine();
 
     void init() override;

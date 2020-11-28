@@ -6,6 +6,7 @@ SectionPanel::SectionPanel(Box globalDimensionsIn, Section sectionIn) :
 }
 
 int SectionPanel::convertColorCodeToAttribute(int code) {
+    if(code < 1 || code > 7) { code = 7; }
     return COLOR_PAIR(code);
 }
 

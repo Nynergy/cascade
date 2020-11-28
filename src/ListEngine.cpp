@@ -1,5 +1,7 @@
 #include "ListEngine.hpp"
 
+ListEngine::ListEngine(std::string listPathIn) : listPath(listPathIn) {}
+
 ListEngine::~ListEngine() {
     for(SectionPanel * panel : panels) {
         delete panel;
@@ -9,6 +11,8 @@ ListEngine::~ListEngine() {
 void ListEngine::init() {
     try {
         createPanels();
+    } catch(InvalidFileException& e) {
+        throw InvalidFileException(e.what());
     } catch(InvalidRatioException& e) {
         throw InvalidRatioException(e.what());
     }
@@ -19,16 +23,27 @@ void ListEngine::createPanels() {
         std::vector<Section> sections = getSectionsFromList();
         std::vector<Box> layout = generateLayoutFromSections(sections);
         populatePanels(sections, layout);
+    } catch(InvalidFileException& e) {
+        throw InvalidFileException(e.what());
     } catch(InvalidRatioException& e) {
         throw InvalidRatioException(e.what());
     }
 }
 
 std::vector<Section> ListEngine::getSectionsFromList() {
-    std::string listPath = Config::getInstance().getValueFromKey("MasterList");
-    listPath = convertToAbsolutePath(listPath);
-    ListParser parser = ListParser(listPath);
-    std::vector<Section> sections = parser.parseList();
+    std::vector<Section> sections;
+
+    try {
+        listPath = convertToAbsolutePath(listPath);
+        ListParser parser = ListParser(listPath);
+        if(parser.missingList) {
+            sections = defaultList();
+        } else {
+            sections = parser.parseList();
+        }
+    } catch(InvalidFileException& e) {
+        throw InvalidFileException(e.what());
+    }
 
     return sections;
 }
@@ -51,6 +66,14 @@ bool ListEngine::isRelativePath(std::string path) {
     return firstChar == "~";
 }
 
+std::vector<Section> ListEngine::defaultList() {
+    Section defaultSection("TODO", 7);
+    std::vector<Section> sections;
+    sections.push_back(defaultSection);
+
+    return sections;
+}
+
 std::vector<Box> ListEngine::generateLayoutFromSections(std::vector<Section> sections) {
     int numSections = (int)sections.size();
     std::string ratioString = "";
@@ -61,6 +84,13 @@ std::vector<Box> ListEngine::generateLayoutFromSections(std::vector<Section> sec
     layoutRatio = removeTrailingColon(ratioString);
     Box layoutBounds = generateLayoutBounds();
     std::vector<Box> layout;
+
+    if(layoutRatio == "1") {
+        layout.push_back(layoutBounds);
+        
+        return layout;
+    }
+
     try {
         layout = Layouts::customVLayout(layoutRatio, &layoutBounds);
     } catch(InvalidRatioException& e) {
@@ -97,7 +127,11 @@ void ListEngine::run() {
         // Handle input first, then render panels
         switch(key) {
             case KEY_RESIZE:
-                resizePanels();
+                try {
+                    resizePanels();
+                } catch(InvalidRatioException& e) {
+                    throw InvalidRatioException(e.what());
+                }
                 break;
             default:
                 break;

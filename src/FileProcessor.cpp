@@ -2,6 +2,10 @@
 
 FileProcessor::FileProcessor(std::string inputFileIn) : inputFile(inputFileIn) {
 	infile.open(inputFile, std::ios::in);
+    if(!infile.good()) {
+        const char * message = "File does not exist.";
+        throw InvalidFileException(message);
+    }
 
 	if(!std::getline(infile, line)) {
 		isEOF = true;

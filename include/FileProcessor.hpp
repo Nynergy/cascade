@@ -3,6 +3,8 @@
 #include <fstream>
 #include <string>
 
+#include "Exceptions.hpp"
+
 class FileProcessor {
 
 private:
