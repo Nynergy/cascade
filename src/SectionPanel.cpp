@@ -1,7 +1,7 @@
 #include "SectionPanel.hpp"
 
 SectionPanel::SectionPanel(Box globalDimensionsIn, Section sectionIn) :
-    Panel(globalDimensionsIn, sectionIn.title), section(sectionIn) {
+    Panel(globalDimensionsIn, sectionIn.title), section(sectionIn), highlightIndex(0) {
     sectionColor = convertColorCodeToAttribute(section.colorCode);
 }
 
@@ -61,6 +61,47 @@ void SectionPanel::drawItems() {
 }
 
 void SectionPanel::drawItemWithOffset(std::string item, int offset) {
+    // Draw item bar, then item name, so it spans the whole screen
+    Point a(0, offset); Point b(columns, offset);
+    drawCustomHLineBetweenPoints(' ', a, b, win);
+
     Point itemPoint(0, offset);
     drawStringAtPoint(item, itemPoint, win);
+}
+
+void SectionPanel::drawPanelFocused() {
+    clearScreen();
+    drawTitleBar();
+    drawItemsWithHighlight();
+    refreshWindow();
+}
+
+void SectionPanel::drawItemsWithHighlight() {
+    int offset = 0;
+    bool highlighted;
+    for(std::string item : section.items) {
+        highlighted = false;
+        if(offset == highlightIndex) {
+            setAttributes(getAttribute("reverse"), win);
+            highlighted = true;
+        }
+        offset++;
+        drawItemWithOffset(item, offset);
+        if(highlighted) {
+            unsetAttributes(getAttribute("reverse"), win);
+        }
+    }
+}
+
+void SectionPanel::incrementHighlightIndex() {
+    if(section.items.size() == 0) {
+        highlightIndex = -1;
+        return;
+    }
+
+    highlightIndex = (highlightIndex + 1) % section.items.size();
+}
+
+void SectionPanel::decrementHighlightIndex() {
+    highlightIndex = highlightIndex == 0 ? section.items.size() - 1 : highlightIndex - 1;
 }

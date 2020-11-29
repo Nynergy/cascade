@@ -2,13 +2,13 @@
 
 #include "Config.hpp"
 #include "ListParser.hpp"
-#include "SectionPanel.hpp"
+#include "State.hpp"
 
 class ListEngine : public Engine {
 
 private:
     std::string listPath;
-    std::vector<SectionPanel *> panels;
+    State * state;
     std::string layoutRatio;
 
     void createPanels();

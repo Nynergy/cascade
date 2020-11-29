@@ -9,6 +9,7 @@ class SectionPanel : public Panel {
 private:
     Section section;
     int sectionColor;
+    int highlightIndex;
 
     int convertColorCodeToAttribute(int code);
     void drawTitleBar();
@@ -17,10 +18,14 @@ private:
     std::string widenTitle();
     void drawItems();
     void drawItemWithOffset(std::string item, int offset);
+    void drawItemsWithHighlight();
 
 public:
     SectionPanel(Box globalDimensionsIn, Section sectionIn);
 
     void drawPanel() override;
+    void drawPanelFocused();
+    void incrementHighlightIndex();
+    void decrementHighlightIndex();
 
 };

@@ -1,16 +1,17 @@
 #include "ListEngine.hpp"
 
-ListEngine::ListEngine(std::string listPathIn) : listPath(listPathIn) {}
+ListEngine::ListEngine(std::string listPathIn) : listPath(listPathIn) {
+    state = new State();
+}
 
 ListEngine::~ListEngine() {
-    for(SectionPanel * panel : panels) {
-        delete panel;
-    }
+    delete state;
 }
 
 void ListEngine::init() {
     try {
         createPanels();
+        state->setCurrentPanel(0);
     } catch(InvalidFileException& e) {
         throw InvalidFileException(e.what());
     } catch(InvalidRatioException& e) {
@@ -117,7 +118,7 @@ void ListEngine::populatePanels(std::vector<Section> sections, std::vector<Box> 
     int numPanels = (int)sections.size();
     for(int i = 0; i < numPanels; i++) {
         SectionPanel * panel = new SectionPanel(layout[i], sections[i]);
-        panels.push_back(panel);
+        state->addPanel(panel);
     }
 }
 
@@ -142,8 +143,12 @@ void ListEngine::run() {
 }
 
 void ListEngine::renderPanels() {
-    for(SectionPanel * panel : panels) {
-        panel->drawPanel();
+    for(SectionPanel * panel : state->getPanels()) {
+        if(state->panelIsFocused(panel)) {
+            panel->drawPanelFocused();
+        } else {
+            panel->drawPanel();
+        }
     }
 }
 
@@ -158,6 +163,7 @@ void ListEngine::resizePanels() {
     }
 
     int numPanels = (int)layout.size();
+    std::vector<SectionPanel *> panels = state->getPanels();
     for(int i = 0; i < numPanels; i++) {
         panels[i]->resizePanel(layout[i]);
     }
