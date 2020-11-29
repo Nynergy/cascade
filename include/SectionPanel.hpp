@@ -19,6 +19,7 @@ private:
     void drawItems();
     void drawItemWithOffset(std::string item, int offset);
     void drawItemsWithHighlight();
+    std::string truncateStringByLength(std::string str, int length);
 
 public:
     SectionPanel(Box globalDimensionsIn, Section sectionIn);
@@ -30,5 +31,9 @@ public:
     void incrementHighlightIndex();
     void decrementHighlightIndex();
     Section getSection();
+    std::string getSectionTitle();
+    void setSectionTitle(std::string newTitle);
+    std::string getCurrentItem();
+    void setCurrentItem(std::string item);
     void incrementColorCode();
 };

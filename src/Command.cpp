@@ -65,13 +65,30 @@ void CycleColorCommand::execute() {
     panel->incrementColorCode();
 }
 
-EditBufferCommand::EditBufferCommand(State * state) : Command(state) {}
+EditItemCommand::EditItemCommand(State * state) : Command(state) {}
 
-void EditBufferCommand::execute() {
+void EditItemCommand::execute() {
     curs_set(1); // Make cursor visible while typing
+    setupEditBuffer();
+    std::string input = getUserInput();
+    changeItemName(input);
+    teardownEditBuffer();
+    curs_set(0); // Make cursor invisible again
+}
 
-    // FIXME This is just a test of the InputForm
-    InputForm * inputForm = new InputForm("Enter a name:");
+void EditItemCommand::setupEditBuffer() {
+    std::string item = getItemName();
+    inputForm = new InputForm("Edit Item Name:");
+    inputForm->injectString(item);
+}
+
+std::string EditItemCommand::getItemName() {
+    SectionPanel * panel = state->getCurrentPanel();
+    return panel->getCurrentItem();
+}
+
+std::string EditItemCommand::getUserInput() {
+    std::string userInput;
     int ch;
     bool exit = false;
     while(!exit) {
@@ -81,18 +98,17 @@ void EditBufferCommand::execute() {
             case 10: // Enter Key
                 {
                     char * str = inputForm->getInputFromBuffer();
-                    std::string userInput = str;
-                    drawStringAtPoint(str, Point(0, LINES - 1));
+                    userInput = str;
                     inputForm->returnFocus();
                     exit = true;
                 }
                 break;
-            case KEY_F(1):
+            case KEY_F(1): // Cancel form input
                 {
                     exit = true;
                 }
                 break;
-            default: // Delegate to form
+            default: // Delegate to form driver
                 {
                     inputForm->handleInput(ch);
                 }
@@ -100,6 +116,77 @@ void EditBufferCommand::execute() {
         }
     }
 
+    return userInput;
+}
+
+void EditItemCommand::changeItemName(std::string input) {
+    SectionPanel * panel = state->getCurrentPanel();
+    panel->setCurrentItem(input);
+}
+
+void EditItemCommand::teardownEditBuffer() {
+    delete inputForm;
+}
+
+EditSectionCommand::EditSectionCommand(State * state) : Command(state) {}
+
+void EditSectionCommand::execute() {
+    curs_set(1); // Make cursor visible while typing
+    setupEditBuffer();
+    std::string input = getUserInput();
+    changeSectionName(input);
+    teardownEditBuffer();
     curs_set(0); // Make cursor invisible again
+}
+
+void EditSectionCommand::setupEditBuffer() {
+    std::string title = getSectionTitle();
+    inputForm = new InputForm("Edit Section Title:");
+    inputForm->injectString(title);
+}
+
+std::string EditSectionCommand::getSectionTitle() {
+    SectionPanel * panel = state->getCurrentPanel();
+    return panel->getSectionTitle();
+}
+
+std::string EditSectionCommand::getUserInput() {
+    std::string userInput;
+    int ch;
+    bool exit = false;
+    while(!exit) {
+        inputForm->drawForm();
+        ch = wgetch(inputForm->getWin());
+        switch(ch) {
+            case 10: // Enter Key
+                {
+                    char * str = inputForm->getInputFromBuffer();
+                    userInput = str;
+                    inputForm->returnFocus();
+                    exit = true;
+                }
+                break;
+            case KEY_F(1): // Cancel form input
+                {
+                    exit = true;
+                }
+                break;
+            default: // Delegate to form driver
+                {
+                    inputForm->handleInput(ch);
+                }
+                break;
+        }
+    }
+
+    return userInput;
+}
+
+void EditSectionCommand::changeSectionName(std::string input) {
+    SectionPanel * panel = state->getCurrentPanel();
+    panel->setSectionTitle(input);
+}
+
+void EditSectionCommand::teardownEditBuffer() {
     delete inputForm;
 }

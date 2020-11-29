@@ -47,7 +47,7 @@ void SectionPanel::drawTitle() {
 }
 
 std::string SectionPanel::widenTitle() {
-    std::string wideTitle = " " + title + " ";
+    std::string wideTitle = " " + truncateStringByLength(title, columns - 5) + " ";
 
     return wideTitle;
 }
@@ -55,8 +55,9 @@ std::string SectionPanel::widenTitle() {
 void SectionPanel::drawItems() {
     int offset = 0;
     for(std::string item : section.items) {
+        std::string truncItem = truncateStringByLength(item, columns - 2);
         offset++;
-        drawItemWithOffset(item, offset);
+        drawItemWithOffset(truncItem, offset);
     }
 }
 
@@ -80,17 +81,28 @@ void SectionPanel::drawItemsWithHighlight() {
     int offset = 0;
     bool highlighted;
     for(std::string item : section.items) {
+        std::string truncItem = truncateStringByLength(item, columns - 2);
         highlighted = false;
         if(offset == highlightIndex) {
             setAttributes(getAttribute("reverse"), win);
             highlighted = true;
         }
         offset++;
-        drawItemWithOffset(item, offset);
+        drawItemWithOffset(truncItem, offset);
         if(highlighted) {
             unsetAttributes(getAttribute("reverse"), win);
         }
     }
+}
+
+std::string SectionPanel::truncateStringByLength(std::string str, int length) {
+    int stringLength = str.size();
+    if(stringLength >= length) {
+        std::string truncStr = str.substr(0, length - 3);
+        return truncStr + "...";
+    }
+
+    return str;
 }
 
 void SectionPanel::scrollDown() {
@@ -116,6 +128,24 @@ void SectionPanel::decrementHighlightIndex() {
 
 Section SectionPanel::getSection() {
     return section;
+}
+
+std::string SectionPanel::getSectionTitle() {
+    return section.title;
+}
+
+void SectionPanel::setSectionTitle(std::string newTitle) {
+    // section.title is for file serialization, setTitle() is for Panel title
+    section.title = newTitle;
+    setTitle(newTitle);
+}
+
+std::string SectionPanel::getCurrentItem() {
+    return section.items[highlightIndex];
+}
+
+void SectionPanel::setCurrentItem(std::string item) {
+    section.items[highlightIndex] = item;
 }
 
 void SectionPanel::incrementColorCode() {

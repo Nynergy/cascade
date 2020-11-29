@@ -68,8 +68,30 @@ public:
     void execute() override;
 };
 
-class EditBufferCommand : public Command {
+class EditItemCommand : public Command {
+private:
+    InputForm * inputForm;
+
+    void setupEditBuffer();
+    std::string getItemName();
+    std::string getUserInput();
+    void changeItemName(std::string input);
+    void teardownEditBuffer();
 public:
-    EditBufferCommand(State * state);
+    EditItemCommand(State * state);
+    void execute() override;
+};
+
+class EditSectionCommand : public Command {
+private:
+    InputForm * inputForm;
+
+    void setupEditBuffer();
+    std::string getSectionTitle();
+    std::string getUserInput();
+    void changeSectionName(std::string input);
+    void teardownEditBuffer();
+public:
+    EditSectionCommand(State * state);
     void execute() override;
 };

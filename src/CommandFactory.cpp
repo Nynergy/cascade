@@ -29,7 +29,10 @@ Command * CommandFactory::getCommandFromKey(int key) {
             command = new CycleColorCommand(state);
             break;
         case 'e':
-            command = new EditBufferCommand(state);
+            command = new EditItemCommand(state);
+            break;
+        case 'E':
+            command = new EditSectionCommand(state);
             break;
 		default:
 			command = new NOPCommand(state);

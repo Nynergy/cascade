@@ -12,10 +12,13 @@ private:
     FIELD * fields[2];
     FORM * form;
     const char * prompt;
+    int promptLength;
+    std::string buffer;
     WINDOW * win;
     int lines, columns;
-    std::string buffer;
 
+    void setupFields();
+    void setupForm();
     void clearForm();
     void clearBehindForm();
     void drawPrompt();
@@ -29,6 +32,7 @@ public:
     ~InputForm();
     void drawForm();
     WINDOW * getWin();
+    void injectString(std::string str);
     void handleInput(int ch);
     char * getInputFromBuffer();
     void returnFocus();

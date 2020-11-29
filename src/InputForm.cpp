@@ -1,12 +1,24 @@
 #include "InputForm.hpp"
 
-InputForm::InputForm(const char * prompt) : prompt(prompt) {
-    int promptLength = strlen(prompt);
+InputForm::InputForm(const char * prompt) : prompt(prompt), promptLength(strlen(prompt)), buffer("") {
+    setupFields();
+    setupForm();
+}
+
+InputForm::~InputForm() {
+    unpost_form(form);
+    free_form(form);
+    free_field(fields[0]);
+    delwin(win);
+}
+
+void InputForm::setupFields() {
     fields[0] = new_field(1, COLS - (promptLength + 1), LINES - 1, promptLength + 1, 0, 0);
     fields[1] = NULL;
     field_opts_off(fields[0], O_STATIC);
+}
 
-    // Setup form with it's own window
+void InputForm::setupForm() {
     form = new_form(fields);
     scale_form(form, &lines, &columns);
 
@@ -17,15 +29,6 @@ InputForm::InputForm(const char * prompt) : prompt(prompt) {
 
     post_form(form);
     form_driver(form, REQ_BEG_FIELD);
-
-    buffer = "";
-}
-
-InputForm::~InputForm() {
-    unpost_form(form);
-    free_form(form);
-    free_field(fields[0]);
-    delwin(win);
 }
 
 void InputForm::drawForm() {
@@ -35,7 +38,6 @@ void InputForm::drawForm() {
 }
 
 void InputForm::clearForm() {
-    int promptLength = strlen(prompt);
     Point ul(promptLength + 1, 0); Point lr(COLS - 1, 0);
     Box formBox(ul, lr);
     clearBox(formBox, win);
@@ -54,7 +56,6 @@ void InputForm::drawPrompt() {
 }
 
 void InputForm::drawBuffer() {
-    int promptLength = strlen(prompt);
     int bufferSize = (int)buffer.size();
     std::string tempBuffer;
     int formLength = columns - (promptLength + 2);
@@ -70,6 +71,13 @@ void InputForm::drawBuffer() {
 
 WINDOW * InputForm::getWin() {
     return win;
+}
+
+void InputForm::injectString(std::string str) {
+    for(char ch : str) {
+        form_driver(form, ch);
+        addCharToBuffer(ch);
+    }
 }
 
 void InputForm::handleInput(int ch) {
