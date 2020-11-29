@@ -16,6 +16,14 @@ std::vector<SectionPanel *> State::getPanels() {
 	return panels;
 }
 
+void State::replacePanels(std::vector<SectionPanel *> newPanels) {
+    for(SectionPanel * panel : panels) {
+        delete panel;
+    }
+
+    panels = newPanels;
+}
+
 void State::setCurrentPanel(int panelIndex) {
 	panelIndex = wrapIndex(panelIndex);
 	currentPanel = panelIndex;

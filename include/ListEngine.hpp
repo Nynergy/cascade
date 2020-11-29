@@ -17,12 +17,8 @@ private:
     std::string convertToAbsolutePath(std::string path);
     bool isRelativePath(std::string path);
     std::vector<Section> defaultList();
-    std::vector<Box> generateLayoutFromSections(std::vector<Section> sections);
-    std::string removeTrailingColon(std::string ratioString);
-    Box generateLayoutBounds();
-    void populatePanels(std::vector<Section> sections, std::vector<Box> layout);
+    void passPanelsToState(std::vector<SectionPanel *> panels);
     void renderPanels();
-    void resizePanels();
     void handleInput(int key);
 
 public:

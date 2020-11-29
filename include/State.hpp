@@ -16,6 +16,7 @@ public:
 	~State();
 	void addPanel(SectionPanel * panel);
 	std::vector<SectionPanel *> getPanels();
+    void replacePanels(std::vector<SectionPanel *> newPanels);
 	void setCurrentPanel(int panelIndex);
 	SectionPanel * getCurrentPanel();
 	int getCurrentPanelIndex();

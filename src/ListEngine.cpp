@@ -23,8 +23,8 @@ void ListEngine::init() {
 void ListEngine::createPanels() {
     try {
         std::vector<Section> sections = getSectionsFromList();
-        std::vector<Box> layout = generateLayoutFromSections(sections);
-        populatePanels(sections, layout);
+        std::vector<SectionPanel *> panels = PanelConstructor::constructPanelsFromSections(sections);
+        passPanelsToState(panels);
     } catch(InvalidFileException& e) {
         throw InvalidFileException(e.what());
     } catch(InvalidRatioException& e) {
@@ -76,49 +76,8 @@ std::vector<Section> ListEngine::defaultList() {
     return sections;
 }
 
-std::vector<Box> ListEngine::generateLayoutFromSections(std::vector<Section> sections) {
-    int numSections = (int)sections.size();
-    std::string ratioString = "";
-    for(int i = 0; i < numSections; i++) {
-        ratioString = ratioString + "1:";
-    }
-
-    layoutRatio = removeTrailingColon(ratioString);
-    Box layoutBounds = generateLayoutBounds();
-    std::vector<Box> layout;
-
-    if(layoutRatio == "1") {
-        layout.push_back(layoutBounds);
-        
-        return layout;
-    }
-
-    try {
-        layout = Layouts::customVLayout(layoutRatio, &layoutBounds);
-    } catch(InvalidRatioException& e) {
-        throw InvalidRatioException(e.what());
-    }
-
-    return layout;
-}
-
-std::string ListEngine::removeTrailingColon(std::string ratioString) {
-    std::string trimmed = ratioString.substr(0, ratioString.size() - 1);
-
-    return trimmed;
-}
-
-Box ListEngine::generateLayoutBounds() {
-    Point ul(0, 0); Point lr(COLS - 1, LINES - 2);
-    Box bounds(ul, lr);
-
-    return bounds;
-}
-
-void ListEngine::populatePanels(std::vector<Section> sections, std::vector<Box> layout) {
-    int numPanels = (int)sections.size();
-    for(int i = 0; i < numPanels; i++) {
-        SectionPanel * panel = new SectionPanel(layout[i], sections[i]);
+void ListEngine::passPanelsToState(std::vector<SectionPanel *> panels) {
+    for(SectionPanel * panel : panels) {
         state->addPanel(panel);
     }
 }
@@ -128,19 +87,7 @@ void ListEngine::run() {
     while(state->userHasNotQuit()) {
         // Handle input first, then render panels
         key = getch();
-        switch(key) {
-            case KEY_RESIZE:
-                try {
-                    resizePanels();
-                } catch(InvalidRatioException& e) {
-                    throw InvalidRatioException(e.what());
-                }
-                break;
-            default:
-                handleInput(key);
-                break;
-        }
-
+        handleInput(key);
         renderPanels();
     }
 }
@@ -152,23 +99,6 @@ void ListEngine::renderPanels() {
         } else {
             panel->drawPanel();
         }
-    }
-}
-
-void ListEngine::resizePanels() {
-    std::vector<Section> sections = state->getSections();
-    std::vector<Box> layout;
-
-    try {
-        layout = generateLayoutFromSections(sections);
-    } catch(InvalidRatioException& e) {
-        throw InvalidRatioException(e.what());
-    }
-
-    int numPanels = (int)layout.size();
-    std::vector<SectionPanel *> panels = state->getPanels();
-    for(int i = 0; i < numPanels; i++) {
-        panels[i]->resizePanel(layout[i]);
     }
 }
 

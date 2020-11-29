@@ -8,6 +8,14 @@ void NOPCommand::execute() {
 	// Absolutely nothing
 }
 
+ResizeWindowCommand::ResizeWindowCommand(State * state) : Command(state) {}
+
+void ResizeWindowCommand::execute() {
+    std::vector<Section> sections = state->getSections();
+    std::vector<SectionPanel *> newPanels = PanelConstructor::constructPanelsFromSections(sections);
+    state->replacePanels(newPanels);
+}
+
 QuitApplicationCommand::QuitApplicationCommand(State * state) : Command(state) {}
 
 void QuitApplicationCommand::execute() {

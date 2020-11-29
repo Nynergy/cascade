@@ -1,5 +1,6 @@
 #pragma once
 
+#include "PanelConstructor.hpp"
 #include "State.hpp"
 
 class Command {
@@ -16,6 +17,12 @@ class NOPCommand : public Command {
 public:
 	NOPCommand(State * state);
 	void execute() override;
+};
+
+class ResizeWindowCommand : public Command {
+public:
+    ResizeWindowCommand(State * state);
+    void execute() override;
 };
 
 class QuitApplicationCommand : public Command {
