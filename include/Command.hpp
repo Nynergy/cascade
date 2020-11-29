@@ -53,3 +53,9 @@ public:
 	ScrollUpCommand(State * state);
 	void execute() override;
 };
+
+class CycleColorCommand : public Command {
+public:
+    CycleColorCommand(State * state);
+    void execute() override;
+};

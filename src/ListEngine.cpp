@@ -156,11 +156,11 @@ void ListEngine::renderPanels() {
 }
 
 void ListEngine::resizePanels() {
-    Box layoutBounds = generateLayoutBounds();
+    std::vector<Section> sections = state->getSections();
     std::vector<Box> layout;
 
     try {
-        layout = Layouts::customVLayout(layoutRatio, &layoutBounds);
+        layout = generateLayoutFromSections(sections);
     } catch(InvalidRatioException& e) {
         throw InvalidRatioException(e.what());
     }

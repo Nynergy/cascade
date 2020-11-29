@@ -29,5 +29,6 @@ public:
     void scrollUp();
     void incrementHighlightIndex();
     void decrementHighlightIndex();
-
+    Section getSection();
+    void incrementColorCode();
 };

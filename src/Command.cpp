@@ -49,3 +49,10 @@ void ScrollUpCommand::execute() {
     SectionPanel * panel = state->getCurrentPanel();
 	panel->scrollUp();
 }
+
+CycleColorCommand::CycleColorCommand(State * state) : Command(state) {}
+
+void CycleColorCommand::execute() {
+    SectionPanel * panel = state->getCurrentPanel();
+    panel->incrementColorCode();
+}

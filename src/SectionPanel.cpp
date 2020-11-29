@@ -113,3 +113,13 @@ void SectionPanel::incrementHighlightIndex() {
 void SectionPanel::decrementHighlightIndex() {
     highlightIndex = highlightIndex == 0 ? section.items.size() - 1 : highlightIndex - 1;
 }
+
+Section SectionPanel::getSection() {
+    return section;
+}
+
+void SectionPanel::incrementColorCode() {
+    int code = (section.colorCode % 7) + 1;
+    section.colorCode = code;
+    sectionColor = convertColorCodeToAttribute(code);
+}

@@ -22,6 +22,9 @@ Command * CommandFactory::getCommandFromKey(int key) {
 		case 'k':
 			command = new ScrollUpCommand(state);
 			break;
+        case 'c':
+            command = new CycleColorCommand(state);
+            break;
 		default:
 			command = new NOPCommand(state);
 			break;

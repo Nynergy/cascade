@@ -20,6 +20,7 @@ public:
 	SectionPanel * getCurrentPanel();
 	int getCurrentPanelIndex();
 	bool panelIsFocused(SectionPanel * panel);
+    std::vector<Section> getSections();
 	void setExitFlag(bool flag);
 	bool userHasQuit();
 	bool userHasNotQuit();

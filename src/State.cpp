@@ -45,6 +45,15 @@ bool State::panelIsFocused(SectionPanel * panel) {
 	return panel == panels[currentPanel];
 }
 
+std::vector<Section> State::getSections() {
+    std::vector<Section> sections;
+    for(SectionPanel * panel : panels) {
+        sections.push_back(panel->getSection());
+    }
+
+    return sections;
+}
+
 void State::setExitFlag(bool flag) {
 	exitFlag = flag;
 }
