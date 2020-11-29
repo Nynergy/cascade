@@ -26,7 +26,7 @@ CFLAGS := -Wall -Werror
 LDFLAGS := -L.
 
 # Link against third party libraries
-LDLIBS := -lncurses -ltinfo
+LDLIBS := -lncurses -ltinfo -lform
 
 ### RECIPES ###
 

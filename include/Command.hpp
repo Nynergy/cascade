@@ -1,5 +1,6 @@
 #pragma once
 
+#include "InputForm.hpp"
 #include "PanelConstructor.hpp"
 #include "State.hpp"
 
@@ -64,5 +65,11 @@ public:
 class CycleColorCommand : public Command {
 public:
     CycleColorCommand(State * state);
+    void execute() override;
+};
+
+class EditBufferCommand : public Command {
+public:
+    EditBufferCommand(State * state);
     void execute() override;
 };

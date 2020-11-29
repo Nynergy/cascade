@@ -64,3 +64,49 @@ void CycleColorCommand::execute() {
     SectionPanel * panel = state->getCurrentPanel();
     panel->incrementColorCode();
 }
+
+EditBufferCommand::EditBufferCommand(State * state) : Command(state) {}
+
+void EditBufferCommand::execute() {
+    std::vector<SectionPanel *> panels = state->getPanels();
+    curs_set(1); // Make cursor visible while typing
+
+    // FIXME This is just a test of the InputForm
+    InputForm * inputForm = new InputForm("Enter a name:");
+    int ch;
+    bool exit = false;
+    while(!exit) {
+        ch = getch();
+        switch(ch) {
+            case 10: // Enter Key
+                {
+                    char * str = inputForm->getInputFromBuffer();
+                    std::string userInput = str;
+                    drawStringAtPoint(str, Point(0, LINES - 1));
+                    inputForm->returnFocus();
+                    exit = true;
+                }
+                break;
+            case KEY_F(1):
+                {
+                    exit = true;
+                }
+                break;
+            default: // Delegate to form
+                {
+                    inputForm->handleInput(ch);
+                    for(SectionPanel * panel : panels) {
+                        if(state->panelIsFocused(panel)) {
+                            panel->drawPanelFocused();
+                        } else {
+                            panel->drawPanel();
+                        }
+                    }
+                }
+                break;
+        }
+    }
+
+    curs_set(0); // Make cursor invisible again
+    delete inputForm;
+}
