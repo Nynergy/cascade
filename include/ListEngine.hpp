@@ -1,14 +1,15 @@
 #pragma once
 
+#include "CommandFactory.hpp"
 #include "Config.hpp"
 #include "ListParser.hpp"
-#include "State.hpp"
 
 class ListEngine : public Engine {
 
 private:
     std::string listPath;
     State * state;
+    CommandFactory * commandFactory;
     std::string layoutRatio;
 
     void createPanels();
@@ -22,6 +23,7 @@ private:
     void populatePanels(std::vector<Section> sections, std::vector<Box> layout);
     void renderPanels();
     void resizePanels();
+    void handleInput(int key);
 
 public:
     ListEngine(std::string listPathIn);

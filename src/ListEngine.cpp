@@ -2,6 +2,7 @@
 
 ListEngine::ListEngine(std::string listPathIn) : listPath(listPathIn) {
     state = new State();
+    commandFactory = new CommandFactory(state);
 }
 
 ListEngine::~ListEngine() {
@@ -124,8 +125,9 @@ void ListEngine::populatePanels(std::vector<Section> sections, std::vector<Box> 
 
 void ListEngine::run() {
     int key;
-    while((key = getch()) != 'q') {
+    while(state->userHasNotQuit()) {
         // Handle input first, then render panels
+        key = getch();
         switch(key) {
             case KEY_RESIZE:
                 try {
@@ -135,6 +137,7 @@ void ListEngine::run() {
                 }
                 break;
             default:
+                handleInput(key);
                 break;
         }
 
@@ -167,4 +170,10 @@ void ListEngine::resizePanels() {
     for(int i = 0; i < numPanels; i++) {
         panels[i]->resizePanel(layout[i]);
     }
+}
+
+void ListEngine::handleInput(int key) {
+    Command * command = commandFactory->getCommandFromKey(key);
+    command->execute();
+    delete command;
 }

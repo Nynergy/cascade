@@ -93,6 +93,14 @@ void SectionPanel::drawItemsWithHighlight() {
     }
 }
 
+void SectionPanel::scrollDown() {
+    incrementHighlightIndex();
+}
+
+void SectionPanel::scrollUp() {
+    decrementHighlightIndex();
+}
+
 void SectionPanel::incrementHighlightIndex() {
     if(section.items.size() == 0) {
         highlightIndex = -1;

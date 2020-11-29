@@ -25,6 +25,8 @@ public:
 
     void drawPanel() override;
     void drawPanelFocused();
+    void scrollDown();
+    void scrollUp();
     void incrementHighlightIndex();
     void decrementHighlightIndex();
 
