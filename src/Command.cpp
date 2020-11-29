@@ -68,7 +68,6 @@ void CycleColorCommand::execute() {
 EditBufferCommand::EditBufferCommand(State * state) : Command(state) {}
 
 void EditBufferCommand::execute() {
-    std::vector<SectionPanel *> panels = state->getPanels();
     curs_set(1); // Make cursor visible while typing
 
     // FIXME This is just a test of the InputForm
@@ -76,7 +75,8 @@ void EditBufferCommand::execute() {
     int ch;
     bool exit = false;
     while(!exit) {
-        ch = getch();
+        inputForm->drawForm();
+        ch = wgetch(inputForm->getWin());
         switch(ch) {
             case 10: // Enter Key
                 {
@@ -95,13 +95,6 @@ void EditBufferCommand::execute() {
             default: // Delegate to form
                 {
                     inputForm->handleInput(ch);
-                    for(SectionPanel * panel : panels) {
-                        if(state->panelIsFocused(panel)) {
-                            panel->drawPanelFocused();
-                        } else {
-                            panel->drawPanel();
-                        }
-                    }
                 }
                 break;
         }
