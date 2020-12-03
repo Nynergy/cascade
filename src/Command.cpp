@@ -97,9 +97,7 @@ std::string EditItemCommand::getUserInput() {
         switch(ch) {
             case 10: // Enter Key
                 {
-                    char * str = inputForm->getInputFromBuffer();
-                    userInput = str;
-                    inputForm->returnFocus();
+                    userInput = inputForm->getInputFromBuffer();
                     exit = true;
                 }
                 break;
@@ -160,9 +158,7 @@ std::string EditSectionCommand::getUserInput() {
         switch(ch) {
             case 10: // Enter Key
                 {
-                    char * str = inputForm->getInputFromBuffer();
-                    userInput = str;
-                    inputForm->returnFocus();
+                    userInput = inputForm->getInputFromBuffer();
                     exit = true;
                 }
                 break;

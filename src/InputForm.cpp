@@ -1,34 +1,18 @@
 #include "InputForm.hpp"
 
 InputForm::InputForm(const char * prompt) : prompt(prompt), promptLength(strlen(prompt)), buffer("") {
-    setupFields();
-    setupForm();
+    setupWin();
 }
 
 InputForm::~InputForm() {
-    unpost_form(form);
-    free_form(form);
-    free_field(fields[0]);
     delwin(win);
 }
 
-void InputForm::setupFields() {
-    fields[0] = new_field(1, COLS - (promptLength + 1), LINES - 1, promptLength + 1, 0, 0);
-    fields[1] = NULL;
-    field_opts_off(fields[0], O_STATIC);
-}
-
-void InputForm::setupForm() {
-    form = new_form(fields);
-    scale_form(form, &lines, &columns);
+void InputForm::setupWin() {
+    lines = 1; columns = COLS - (promptLength + 1);
 
     win = newwin(lines, columns + (promptLength + 1), LINES - 1, 0);
     keypad(win, TRUE);
-    set_form_win(form, win);
-    set_form_sub(form, derwin(win, lines, columns, 0, 0));
-
-    post_form(form);
-    form_driver(form, REQ_BEG_FIELD);
 }
 
 void InputForm::drawForm() {
@@ -75,7 +59,6 @@ WINDOW * InputForm::getWin() {
 
 void InputForm::injectString(std::string str) {
     for(char ch : str) {
-        form_driver(form, ch);
         addCharToBuffer(ch);
     }
 }
@@ -84,15 +67,11 @@ void InputForm::handleInput(int ch) {
     switch(ch) {
         case 127: // Backspace Key
             {
-                form_driver(form, REQ_DEL_PREV);
-                form_driver(form, REQ_SCR_BCHAR);
-                form_driver(form, REQ_NEXT_WORD);
                 removeCharFromBuffer();
             }
             break;
         default: // Normal character
             {
-                form_driver(form, ch);
                 addCharToBuffer(ch);
             }
             break;
@@ -110,41 +89,21 @@ void InputForm::addCharToBuffer(int ch) {
     buffer = buffer + str;
 }
 
-char * InputForm::trimWhitespace(char * str) {
-    char * end;
+std::string InputForm::trimWhitespace(std::string str) {
+    size_t first = str.find_first_not_of(' ');
+	if(std::string::npos == first) {
+		return str;
+	}
 
-    // Leading space
-    while(isspace(*str)) {
-        str++;
-    }
+	size_t last = str.find_last_not_of(' ');
 
-    if(str == 0) {
-        // String is all spaces
-        return str;
-    }
-
-    // Trailing space
-    end = str + strnlen(str, 128) - 1;
-    while(end > str && isspace(*end)) {
-        end--;
-    }
-
-    *(end + 1) = '\0';
-
-    return str;
+	return str.substr(first, (last - first + 1));
 }
 
-char * InputForm::getInputFromBuffer() {
-    form_driver(form, REQ_NEXT_FIELD);
-    form_driver(form, REQ_PREV_FIELD);
-    char * input = trimWhitespace(field_buffer(fields[0], 0));
-    form_driver(form, REQ_CLR_FIELD);
+std::string InputForm::getInputFromBuffer() {
+    std::string input = trimWhitespace(buffer);
 
     clearBehindForm();
 
     return input;
-}
-
-void InputForm::returnFocus() {
-    form_driver(form, REQ_BEG_FIELD);
 }
