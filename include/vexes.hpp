@@ -218,6 +218,56 @@ public:
 
 };
 
+/*
+ * The Form class is an incredibly useful tool for creating single line fields
+ * which the user can enter text into. The input "box" is scrollable, and the
+ * form automatically trims whitespace from either end of the input. It can
+ * take a leading prompt (or perhaps you can think of it as a label) of
+ * arbitrary length, and you can even inject strings into the buffer before
+ * editing to "pre-fill" a field.
+ */
+class Form {
+
+protected:
+    Point origin; // Leftmost point of Form in reference to stdscr
+    std::string prompt;
+    int promptLength;
+    std::string buffer;
+    WINDOW * win;
+    int lines, columns;
+
+    // Remove buffer remnants in case user deletes input characters
+    void clearForm();
+    // Basic default that draws prompt at far left end
+    void drawPrompt();
+    // Basic default that draws buffer and "scrolls" if it gets too long
+    void drawBuffer();
+
+    // Append incoming character to the end of the buffer
+    void addCharToBuffer(char ch);
+    // Remove the last character from the end of the buffer
+    void removeCharFromBuffer();
+
+    // Choose between adding characters (normal) and deleting (backspace)
+    void handleInput(int ch);
+    // Remove leading and trailing spaces
+    std::string trimWhitespace(std::string str);
+
+public:
+    // Origin point is required, but length and prompt are optional
+    Form(Point origin, int length = COLS, std::string prompt = "");
+    // Default just deletes internal WINDOW
+    virtual ~Form();
+
+    // Clear remnants, draw prompt, draw buffer
+    virtual void drawForm();
+    // Adds an arbitrary string to the internal buffer, one char at a time
+    void injectString(std::string str);
+    // Enters an internal loop where user can fill out the form
+    virtual std::string edit();
+
+};
+
 ///////////////////////////// LAYOUT UTILITIES ///////////////////////////////
 
 /*

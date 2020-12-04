@@ -68,18 +68,17 @@ void CycleColorCommand::execute() {
 EditItemCommand::EditItemCommand(State * state) : Command(state) {}
 
 void EditItemCommand::execute() {
-    curs_set(1); // Make cursor visible while typing
     setupEditBuffer();
     std::string input = getUserInput();
     changeItemName(input);
     teardownEditBuffer();
-    curs_set(0); // Make cursor invisible again
 }
 
 void EditItemCommand::setupEditBuffer() {
     std::string item = getItemName();
-    inputForm = new InputForm("Edit Item Name:");
-    inputForm->injectString(item);
+    Point formPoint(0, LINES - 1);
+    form = new Form(formPoint, COLS - 1, "Edit Item Name:");
+    form->injectString(item);
 }
 
 std::string EditItemCommand::getItemName() {
@@ -88,32 +87,7 @@ std::string EditItemCommand::getItemName() {
 }
 
 std::string EditItemCommand::getUserInput() {
-    std::string userInput;
-    int ch;
-    bool exit = false;
-    while(!exit) {
-        inputForm->drawForm();
-        ch = wgetch(inputForm->getWin());
-        switch(ch) {
-            case 10: // Enter Key
-                {
-                    userInput = inputForm->getInputFromBuffer();
-                    exit = true;
-                }
-                break;
-            case KEY_F(1): // Cancel form input
-                {
-                    exit = true;
-                }
-                break;
-            default: // Delegate to form driver
-                {
-                    inputForm->handleInput(ch);
-                }
-                break;
-        }
-    }
-
+    std::string userInput = form->edit();
     return userInput;
 }
 
@@ -123,24 +97,23 @@ void EditItemCommand::changeItemName(std::string input) {
 }
 
 void EditItemCommand::teardownEditBuffer() {
-    delete inputForm;
+    delete form;
 }
 
 EditSectionCommand::EditSectionCommand(State * state) : Command(state) {}
 
 void EditSectionCommand::execute() {
-    curs_set(1); // Make cursor visible while typing
     setupEditBuffer();
     std::string input = getUserInput();
     changeSectionName(input);
     teardownEditBuffer();
-    curs_set(0); // Make cursor invisible again
 }
 
 void EditSectionCommand::setupEditBuffer() {
     std::string title = getSectionTitle();
-    inputForm = new InputForm("Edit Section Title:");
-    inputForm->injectString(title);
+    Point formPoint(0, LINES - 1);
+    form = new Form(formPoint, COLS - 1, "Edit Section Title:");
+    form->injectString(title);
 }
 
 std::string EditSectionCommand::getSectionTitle() {
@@ -149,32 +122,7 @@ std::string EditSectionCommand::getSectionTitle() {
 }
 
 std::string EditSectionCommand::getUserInput() {
-    std::string userInput;
-    int ch;
-    bool exit = false;
-    while(!exit) {
-        inputForm->drawForm();
-        ch = wgetch(inputForm->getWin());
-        switch(ch) {
-            case 10: // Enter Key
-                {
-                    userInput = inputForm->getInputFromBuffer();
-                    exit = true;
-                }
-                break;
-            case KEY_F(1): // Cancel form input
-                {
-                    exit = true;
-                }
-                break;
-            default: // Delegate to form driver
-                {
-                    inputForm->handleInput(ch);
-                }
-                break;
-        }
-    }
-
+    std::string userInput = form->edit();
     return userInput;
 }
 
@@ -184,5 +132,5 @@ void EditSectionCommand::changeSectionName(std::string input) {
 }
 
 void EditSectionCommand::teardownEditBuffer() {
-    delete inputForm;
+    delete form;
 }

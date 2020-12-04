@@ -316,3 +316,112 @@ WINDOW * Panel::getWin() {
 void Panel::setTitle(std::string newTitle) {
     title = newTitle;
 }
+
+/* FORM */
+Form::Form(Point origin, int length, std::string prompt) :
+    origin(origin), prompt(prompt), promptLength((int)prompt.size()), buffer("") {
+    lines = 1; columns = length - (promptLength + 1);
+    win = newwin(lines, length, origin.y, origin.x);
+    keypad(win, TRUE);
+}
+
+Form::~Form() {
+    delwin(win);
+}
+
+void Form::drawForm() {
+    clearForm();
+    drawPrompt();
+    drawBuffer();
+}
+
+void Form::clearForm() {
+    Point ul(promptLength + 1, 0);
+    Point lr(columns + (promptLength + 1), 0);
+    Box formBox(ul, lr);
+    clearBox(formBox, win);
+}
+
+void Form::drawPrompt() {
+    Point promptPoint(0, 0);
+    drawStringAtPoint(prompt, promptPoint, win);
+}
+
+void Form::drawBuffer() {
+    int bufferSize = (int)buffer.size();
+    std::string tempBuffer;
+    int formLength = columns - (promptLength + 2);
+    if(bufferSize >= formLength) {
+        tempBuffer = buffer.substr(bufferSize - formLength, bufferSize);
+    } else {
+        tempBuffer = buffer;
+    }
+
+    Point bufferPoint(promptLength + 1, 0);
+    drawStringAtPoint(tempBuffer, bufferPoint, win); 
+}
+
+void Form::injectString(std::string str) {
+    for(char ch : str) {
+        addCharToBuffer(ch);
+    }
+}
+
+void Form::addCharToBuffer(char ch) {
+    char converted[2];
+    sprintf(converted, "%c", ch);
+    std::string str = converted;
+    buffer = buffer + str;
+}
+
+void Form::removeCharFromBuffer() {
+    buffer = buffer.substr(0, buffer.size() - 1);
+}
+
+std::string Form::edit() {
+    // Make cursor visible while typing
+    curs_set(1);
+
+    int ch;
+    bool exit = false;
+    while(!exit) {
+        drawForm();
+        ch = wgetch(win);
+        switch(ch) {
+            case 10: // Enter Key (submit)
+            case KEY_F(1): // Cancel form input
+                exit = true;
+                break;
+            default: // Delegate to form driver
+                handleInput(ch);
+                break;
+        }
+    }
+
+    // Make cursor invisible after typing
+    curs_set(0);
+
+    return trimWhitespace(buffer);
+}
+
+void Form::handleInput(int ch) {
+    switch(ch) {
+        case 127: // Backspace Key
+            removeCharFromBuffer();
+            break;
+        default: // Normal character
+            addCharToBuffer(ch);
+            break;
+    }
+}
+
+std::string Form::trimWhitespace(std::string str) {
+    size_t first = str.find_first_not_of(' ');
+	if(std::string::npos == first) {
+		return str;
+	}
+
+	size_t last = str.find_last_not_of(' ');
+
+	return str.substr(first, (last - first + 1));
+}

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "InputForm.hpp"
 #include "PanelConstructor.hpp"
 #include "State.hpp"
 
@@ -70,7 +69,7 @@ public:
 
 class EditItemCommand : public Command {
 private:
-    InputForm * inputForm;
+    Form * form;
 
     void setupEditBuffer();
     std::string getItemName();
@@ -84,7 +83,7 @@ public:
 
 class EditSectionCommand : public Command {
 private:
-    InputForm * inputForm;
+    Form * form;
 
     void setupEditBuffer();
     std::string getSectionTitle();
