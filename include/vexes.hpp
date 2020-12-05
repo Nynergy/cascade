@@ -254,8 +254,12 @@ protected:
     std::string trimWhitespace(std::string str);
 
 public:
-    // Origin point is required, but length and prompt are optional
-    Form(Point origin, int length = COLS, std::string prompt = "");
+    // Length and prompt are optional, so I include multiple constructors
+    // Default length is COLS - 1, default prompt is ""
+    Form(Point origin);
+    Form(Point origin, int length);
+    Form(Point origin, std::string prompt);
+    Form(Point origin, int length, std::string prompt);
     // Default just deletes internal WINDOW
     virtual ~Form();
 

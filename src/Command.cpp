@@ -77,7 +77,7 @@ void EditItemCommand::execute() {
 void EditItemCommand::setupEditBuffer() {
     std::string item = getItemName();
     Point formPoint(0, LINES - 1);
-    form = new Form(formPoint, COLS - 1, "Edit Item Name:");
+    form = new Form(formPoint, "Edit Item Name:");
     form->injectString(item);
 }
 
@@ -112,7 +112,7 @@ void EditSectionCommand::execute() {
 void EditSectionCommand::setupEditBuffer() {
     std::string title = getSectionTitle();
     Point formPoint(0, LINES - 1);
-    form = new Form(formPoint, COLS - 1, "Edit Section Title:");
+    form = new Form(formPoint, "Edit Section Title:");
     form->injectString(title);
 }
 

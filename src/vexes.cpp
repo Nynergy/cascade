@@ -318,6 +318,27 @@ void Panel::setTitle(std::string newTitle) {
 }
 
 /* FORM */
+Form::Form(Point origin) :
+    origin(origin), prompt(""), promptLength((int)prompt.size()), buffer("") {
+    lines = 1; columns = COLS - (promptLength + 2);
+    win = newwin(lines, COLS - 1, origin.y, origin.x);
+    keypad(win, TRUE);
+}
+
+Form::Form(Point origin, int length) :
+    origin(origin), prompt(""), promptLength((int)prompt.size()), buffer("") {
+    lines = 1; columns = length - (promptLength + 1);
+    win = newwin(lines, length, origin.y, origin.x);
+    keypad(win, TRUE);
+}
+
+Form::Form(Point origin, std::string prompt) :
+    origin(origin), prompt(prompt), promptLength((int)prompt.size()), buffer("") {
+    lines = 1; columns = COLS - (promptLength + 2);
+    win = newwin(lines, COLS - 1, origin.y, origin.x);
+    keypad(win, TRUE);
+}
+
 Form::Form(Point origin, int length, std::string prompt) :
     origin(origin), prompt(prompt), promptLength((int)prompt.size()), buffer("") {
     lines = 1; columns = length - (promptLength + 1);
@@ -350,7 +371,7 @@ void Form::drawPrompt() {
 void Form::drawBuffer() {
     int bufferSize = (int)buffer.size();
     std::string tempBuffer;
-    int formLength = columns - (promptLength + 2);
+    int formLength = columns;
     if(bufferSize >= formLength) {
         tempBuffer = buffer.substr(bufferSize - formLength, bufferSize);
     } else {
