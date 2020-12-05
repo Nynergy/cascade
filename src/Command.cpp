@@ -68,6 +68,10 @@ void CycleColorCommand::execute() {
 EditItemCommand::EditItemCommand(State * state) : Command(state) {}
 
 void EditItemCommand::execute() {
+    SectionPanel * panel = state->getCurrentPanel();
+    int numItems = panel->getNumItems();
+    if(numItems <= 0) { return; }
+
     setupEditBuffer();
     std::string input = getUserInput();
     changeItemName(input);
@@ -97,7 +101,14 @@ void EditItemCommand::changeItemName(std::string input) {
 }
 
 void EditItemCommand::teardownEditBuffer() {
+    clearBehindForm();
     delete form;
+}
+
+void EditItemCommand::clearBehindForm() {
+    Point ul(0, LINES - 1); Point lr(COLS - 1, LINES - 1);
+    Box formBox(ul, lr);
+    clearBox(formBox);
 }
 
 EditSectionCommand::EditSectionCommand(State * state) : Command(state) {}
@@ -132,5 +143,12 @@ void EditSectionCommand::changeSectionName(std::string input) {
 }
 
 void EditSectionCommand::teardownEditBuffer() {
+    clearBehindForm();
     delete form;
+}
+
+void EditSectionCommand::clearBehindForm() {
+    Point ul(0, LINES - 1); Point lr(COLS - 1, LINES - 1);
+    Box formBox(ul, lr);
+    clearBox(formBox);
 }

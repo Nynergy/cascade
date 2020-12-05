@@ -145,7 +145,19 @@ std::string SectionPanel::getCurrentItem() {
 }
 
 void SectionPanel::setCurrentItem(std::string item) {
-    section.items[highlightIndex] = item;
+    int numItems = getNumItems();
+    if(numItems <= 0) { return; }
+
+    if(item == "") {
+        // TODO: Move this into a deleteCurrentItem() method
+        section.items.erase(section.items.begin() + highlightIndex);
+    } else {
+        section.items[highlightIndex] = item;
+    }
+}
+
+int SectionPanel::getNumItems() {
+    return (int)section.items.size();
 }
 
 void SectionPanel::incrementColorCode() {

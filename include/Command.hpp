@@ -76,6 +76,7 @@ private:
     std::string getUserInput();
     void changeItemName(std::string input);
     void teardownEditBuffer();
+    void clearBehindForm();
 public:
     EditItemCommand(State * state);
     void execute() override;
@@ -90,6 +91,7 @@ private:
     std::string getUserInput();
     void changeSectionName(std::string input);
     void teardownEditBuffer();
+    void clearBehindForm();
 public:
     EditSectionCommand(State * state);
     void execute() override;
