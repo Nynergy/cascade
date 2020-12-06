@@ -35,6 +35,9 @@ public:
     void setSectionTitle(std::string newTitle);
     std::string getCurrentItem();
     void setCurrentItem(std::string item);
+    void deleteCurrentItem();
     int getNumItems();
+    void addItem(std::string newItem);
+    void moveToEndOfItems();
     void incrementColorCode();
 };

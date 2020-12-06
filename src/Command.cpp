@@ -152,3 +152,76 @@ void EditSectionCommand::clearBehindForm() {
     Box formBox(ul, lr);
     clearBox(formBox);
 }
+
+NewItemCommand::NewItemCommand(State * state) : Command(state) {}
+
+void NewItemCommand::execute() {
+    setupEditBuffer();
+    std::string input = getUserInput();
+    addItemToSection(input);
+    teardownEditBuffer();
+}
+
+void NewItemCommand::setupEditBuffer() {
+    Point formPoint(0, LINES - 1);
+    form = new Form(formPoint, "New Item Name:");
+}
+
+std::string NewItemCommand::getUserInput() {
+    std::string userInput = form->edit();
+    return userInput;
+}
+
+void NewItemCommand::addItemToSection(std::string newItem) {
+    SectionPanel * panel = state->getCurrentPanel();
+    panel->addItem(newItem);
+}
+
+void NewItemCommand::teardownEditBuffer() {
+    clearBehindForm();
+    delete form;
+}
+
+void NewItemCommand::clearBehindForm() {
+    Point ul(0, LINES - 1); Point lr(COLS - 1, LINES - 1);
+    Box formBox(ul, lr);
+    clearBox(formBox);
+}
+
+NewSectionCommand::NewSectionCommand(State * state) : Command(state) {}
+
+void NewSectionCommand::execute() {
+    setupEditBuffer();
+    std::string input = getUserInput();
+    createNewSectionWithName(input);
+    teardownEditBuffer();
+}
+
+void NewSectionCommand::setupEditBuffer() {
+    Point formPoint(0, LINES - 1);
+    form = new Form(formPoint, "New Section Title:");
+}
+
+std::string NewSectionCommand::getUserInput() {
+    std::string userInput = form->edit();
+    return userInput;
+}
+
+void NewSectionCommand::createNewSectionWithName(std::string name) {
+    Section newSection(name, 7); // TODO: Default color code will be config-specified
+    std::vector<Section> sections = state->getSections();
+    sections.push_back(newSection);
+    std::vector<SectionPanel *> newPanels = PanelConstructor::constructPanelsFromSections(sections);
+    state->replacePanels(newPanels);
+}
+
+void NewSectionCommand::teardownEditBuffer() {
+    clearBehindForm();
+    delete form;
+}
+
+void NewSectionCommand::clearBehindForm() {
+    Point ul(0, LINES - 1); Point lr(COLS - 1, LINES - 1);
+    Box formBox(ul, lr);
+    clearBox(formBox);
+}

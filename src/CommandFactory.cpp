@@ -34,6 +34,12 @@ Command * CommandFactory::getCommandFromKey(int key) {
         case 'E':
             command = new EditSectionCommand(state);
             break;
+        case 'n':
+            command = new NewItemCommand(state);
+            break;
+        case 'N':
+            command = new NewSectionCommand(state);
+            break;
 		default:
 			command = new NOPCommand(state);
 			break;

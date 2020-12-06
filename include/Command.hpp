@@ -96,3 +96,31 @@ public:
     EditSectionCommand(State * state);
     void execute() override;
 };
+
+class NewItemCommand : public Command {
+private:
+    Form * form;
+
+    void setupEditBuffer();
+    std::string getUserInput();
+    void addItemToSection(std::string newItem);
+    void teardownEditBuffer();
+    void clearBehindForm();
+public:
+    NewItemCommand(State * state);
+    void execute() override;
+};
+
+class NewSectionCommand : public Command {
+private:
+    Form * form;
+
+    void setupEditBuffer();
+    std::string getUserInput();
+    void createNewSectionWithName(std::string name);
+    void teardownEditBuffer();
+    void clearBehindForm();
+public:
+    NewSectionCommand(State * state);
+    void execute() override;
+};

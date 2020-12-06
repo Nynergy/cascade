@@ -149,15 +149,28 @@ void SectionPanel::setCurrentItem(std::string item) {
     if(numItems <= 0) { return; }
 
     if(item == "") {
-        // TODO: Move this into a deleteCurrentItem() method
-        section.items.erase(section.items.begin() + highlightIndex);
+        deleteCurrentItem();
     } else {
         section.items[highlightIndex] = item;
     }
 }
 
+void SectionPanel::deleteCurrentItem() {
+    section.items.erase(section.items.begin() + highlightIndex);
+}
+
 int SectionPanel::getNumItems() {
     return (int)section.items.size();
+}
+
+void SectionPanel::addItem(std::string newItem) {
+    section.items.push_back(newItem);
+    moveToEndOfItems();
+}
+
+void SectionPanel::moveToEndOfItems() {
+    // TODO: This will become more complicated when item scrolling is added
+    highlightIndex = (int)section.items.size() - 1;
 }
 
 void SectionPanel::incrementColorCode() {
