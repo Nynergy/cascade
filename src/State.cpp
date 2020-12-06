@@ -45,6 +45,16 @@ SectionPanel * State::getCurrentPanel() {
 	return panels[currentPanel];
 }
 
+void State::removeCurrentPanel() {
+    delete panels[currentPanel];
+    panels.erase(panels.begin() + currentPanel);
+    resetIndices();
+}
+
+void State::resetIndices() {
+    currentPanel = 0;
+}
+
 int State::getCurrentPanelIndex() {
 	return currentPanel;
 }

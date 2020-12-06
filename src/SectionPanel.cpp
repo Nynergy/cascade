@@ -157,6 +157,15 @@ void SectionPanel::setCurrentItem(std::string item) {
 
 void SectionPanel::deleteCurrentItem() {
     section.items.erase(section.items.begin() + highlightIndex);
+    resetIndices();
+}
+
+void SectionPanel::resetIndices() {
+    if(getNumItems() <= 0) {
+        highlightIndex = -1;
+    } else {
+        highlightIndex = 0;
+    }
 }
 
 int SectionPanel::getNumItems() {

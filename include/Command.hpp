@@ -1,7 +1,6 @@
 #pragma once
 
-#include "PanelConstructor.hpp"
-#include "State.hpp"
+#include "DialogForm.hpp"
 
 class Command {
 protected:
@@ -69,7 +68,7 @@ public:
 
 class EditItemCommand : public Command {
 private:
-    Form * form;
+    DialogForm * form;
 
     void setupEditBuffer();
     std::string getItemName();
@@ -84,7 +83,7 @@ public:
 
 class EditSectionCommand : public Command {
 private:
-    Form * form;
+    DialogForm * form;
 
     void setupEditBuffer();
     std::string getSectionTitle();
@@ -99,7 +98,7 @@ public:
 
 class NewItemCommand : public Command {
 private:
-    Form * form;
+    DialogForm * form;
 
     void setupEditBuffer();
     std::string getUserInput();
@@ -113,7 +112,7 @@ public:
 
 class NewSectionCommand : public Command {
 private:
-    Form * form;
+    DialogForm * form;
 
     void setupEditBuffer();
     std::string getUserInput();
@@ -122,5 +121,35 @@ private:
     void clearBehindForm();
 public:
     NewSectionCommand(State * state);
+    void execute() override;
+};
+
+class DeleteItemCommand : public Command {
+private:
+    DialogForm * dialog;
+
+    void setupDialog();
+    bool getUserChoice();
+    void deleteCurrentItem();
+    void teardownDialog();
+    void clearBehindDialog();
+public:
+    DeleteItemCommand(State * state);
+    void execute() override;
+};
+
+class DeleteSectionCommand : public Command {
+private:
+    DialogForm * dialog1;
+    DialogForm * dialog2;
+
+    void setupDialogs();
+    bool getUserChoice();
+    void deleteCurrentSection();
+    void addDefaultSection();
+    void teardownDialogs();
+    void clearBehindDialog();
+public:
+    DeleteSectionCommand(State * state);
     void execute() override;
 };

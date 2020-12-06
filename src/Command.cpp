@@ -80,8 +80,7 @@ void EditItemCommand::execute() {
 
 void EditItemCommand::setupEditBuffer() {
     std::string item = getItemName();
-    Point formPoint(0, LINES - 1);
-    form = new Form(formPoint, "Edit Item Name:");
+    form = new DialogForm("Edit Item Name:", state);
     form->injectString(item);
 }
 
@@ -122,8 +121,7 @@ void EditSectionCommand::execute() {
 
 void EditSectionCommand::setupEditBuffer() {
     std::string title = getSectionTitle();
-    Point formPoint(0, LINES - 1);
-    form = new Form(formPoint, "Edit Section Title:");
+    form = new DialogForm("Edit Section Title:", state);
     form->injectString(title);
 }
 
@@ -163,8 +161,7 @@ void NewItemCommand::execute() {
 }
 
 void NewItemCommand::setupEditBuffer() {
-    Point formPoint(0, LINES - 1);
-    form = new Form(formPoint, "New Item Name:");
+    form = new DialogForm("New Item Name:", state);
 }
 
 std::string NewItemCommand::getUserInput() {
@@ -198,8 +195,7 @@ void NewSectionCommand::execute() {
 }
 
 void NewSectionCommand::setupEditBuffer() {
-    Point formPoint(0, LINES - 1);
-    form = new Form(formPoint, "New Section Title:");
+    form = new DialogForm("New Section Title:", state);
 }
 
 std::string NewSectionCommand::getUserInput() {
@@ -224,4 +220,104 @@ void NewSectionCommand::clearBehindForm() {
     Point ul(0, LINES - 1); Point lr(COLS - 1, LINES - 1);
     Box formBox(ul, lr);
     clearBox(formBox);
+}
+
+DeleteItemCommand::DeleteItemCommand(State * state) : Command(state) {}
+
+void DeleteItemCommand::execute() {
+    SectionPanel * panel = state->getCurrentPanel();
+    int numItems = panel->getNumItems();
+    if(numItems <= 0) { return; }
+
+    setupDialog();
+    bool agree = getUserChoice();
+    if(agree) {
+        deleteCurrentItem();
+    }
+    teardownDialog();
+}
+
+void DeleteItemCommand::setupDialog() {
+    dialog = new DialogForm("Delete currently selected item? (y/n)", state);
+}
+
+bool DeleteItemCommand::getUserChoice() {
+    bool userChoice = dialog->dialog();
+    return userChoice;
+}
+
+void DeleteItemCommand::deleteCurrentItem() {
+    SectionPanel * panel = state->getCurrentPanel();
+    panel->deleteCurrentItem();
+}
+
+void DeleteItemCommand::teardownDialog() {
+    clearBehindDialog();
+    delete dialog;
+}
+
+void DeleteItemCommand::clearBehindDialog() {
+    Point ul(0, LINES - 1); Point lr(COLS - 1, LINES - 1);
+    Box dialogBox(ul, lr);
+    clearBox(dialogBox);
+}
+
+DeleteSectionCommand::DeleteSectionCommand(State * state) : Command(state) {}
+
+void DeleteSectionCommand::execute() {
+    setupDialogs();
+    bool agree = getUserChoice();
+    if(agree) {
+        deleteCurrentSection();
+    }
+    teardownDialogs();
+}
+
+void DeleteSectionCommand::setupDialogs() {
+    dialog1 = new DialogForm("Delete currently focused section? (y/n)", state);
+    dialog2 = new DialogForm("Really delete section? (y/n)", state);
+}
+
+bool DeleteSectionCommand::getUserChoice() {
+    bool firstChoice = dialog1->dialog();
+    if(firstChoice) {
+        bool secondChoice = dialog2->dialog();
+        return secondChoice;
+    }
+
+    return firstChoice;
+}
+
+void DeleteSectionCommand::deleteCurrentSection() {
+    state->removeCurrentPanel();
+
+    std::vector<SectionPanel *> panels = state->getPanels();
+    int numPanels = (int)panels.size();
+    if(numPanels <= 0) {
+        addDefaultSection();
+    }
+
+    Command * resize = new ResizeWindowCommand(state);
+    resize->execute();
+    delete resize;
+}
+
+void DeleteSectionCommand::addDefaultSection() {
+    Section newSection("TODO", 7); // TODO: Default color code will be config-specified
+    std::vector<Section> sections = state->getSections();
+    sections.push_back(newSection);
+    std::vector<SectionPanel *> newPanels = PanelConstructor::constructPanelsFromSections(sections);
+    state->replacePanels(newPanels);
+}
+
+void DeleteSectionCommand::teardownDialogs() {
+    clearBehindDialog();
+    delete dialog1;
+    delete dialog2;
+}
+
+void DeleteSectionCommand::clearBehindDialog() {
+    Point ul(0, LINES - 1); Point lr(COLS - 1, LINES - 1);
+    Box dialogBox(ul, lr);
+    clearBox(dialogBox);
 }

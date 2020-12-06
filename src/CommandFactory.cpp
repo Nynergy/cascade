@@ -40,6 +40,12 @@ Command * CommandFactory::getCommandFromKey(int key) {
         case 'N':
             command = new NewSectionCommand(state);
             break;
+        case 'd':
+            command = new DeleteItemCommand(state);
+            break;
+        case 'D':
+            command = new DeleteSectionCommand(state);
+            break;
 		default:
 			command = new NOPCommand(state);
 			break;

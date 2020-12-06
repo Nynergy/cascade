@@ -10,6 +10,7 @@ private:
 	bool exitFlag;
 
 	int wrapIndex(int index);
+    void resetIndices();
 
 public:
 	State();
@@ -19,6 +20,7 @@ public:
     void replacePanels(std::vector<SectionPanel *> newPanels);
 	void setCurrentPanel(int panelIndex);
 	SectionPanel * getCurrentPanel();
+    void removeCurrentPanel();
 	int getCurrentPanelIndex();
 	bool panelIsFocused(SectionPanel * panel);
     std::vector<Section> getSections();
