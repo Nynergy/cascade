@@ -2,6 +2,12 @@
 
 Command::Command(State * state) : state(state) {}
 
+void Command::clearBehindDialogForm() {
+    Point ul(0, LINES - 1); Point lr(COLS - 1, LINES - 1);
+    Box box(ul, lr);
+    clearBox(box);
+}
+
 NOPCommand::NOPCommand(State * state) : Command(state) {}
 
 void NOPCommand::execute() {
@@ -100,14 +106,8 @@ void EditItemCommand::changeItemName(std::string input) {
 }
 
 void EditItemCommand::teardownEditBuffer() {
-    clearBehindForm();
+    clearBehindDialogForm();
     delete form;
-}
-
-void EditItemCommand::clearBehindForm() {
-    Point ul(0, LINES - 1); Point lr(COLS - 1, LINES - 1);
-    Box formBox(ul, lr);
-    clearBox(formBox);
 }
 
 EditSectionCommand::EditSectionCommand(State * state) : Command(state) {}
@@ -141,14 +141,8 @@ void EditSectionCommand::changeSectionName(std::string input) {
 }
 
 void EditSectionCommand::teardownEditBuffer() {
-    clearBehindForm();
+    clearBehindDialogForm();
     delete form;
-}
-
-void EditSectionCommand::clearBehindForm() {
-    Point ul(0, LINES - 1); Point lr(COLS - 1, LINES - 1);
-    Box formBox(ul, lr);
-    clearBox(formBox);
 }
 
 NewItemCommand::NewItemCommand(State * state) : Command(state) {}
@@ -175,14 +169,8 @@ void NewItemCommand::addItemToSection(std::string newItem) {
 }
 
 void NewItemCommand::teardownEditBuffer() {
-    clearBehindForm();
+    clearBehindDialogForm();
     delete form;
-}
-
-void NewItemCommand::clearBehindForm() {
-    Point ul(0, LINES - 1); Point lr(COLS - 1, LINES - 1);
-    Box formBox(ul, lr);
-    clearBox(formBox);
 }
 
 NewSectionCommand::NewSectionCommand(State * state) : Command(state) {}
@@ -212,14 +200,8 @@ void NewSectionCommand::createNewSectionWithName(std::string name) {
 }
 
 void NewSectionCommand::teardownEditBuffer() {
-    clearBehindForm();
+    clearBehindDialogForm();
     delete form;
-}
-
-void NewSectionCommand::clearBehindForm() {
-    Point ul(0, LINES - 1); Point lr(COLS - 1, LINES - 1);
-    Box formBox(ul, lr);
-    clearBox(formBox);
 }
 
 DeleteItemCommand::DeleteItemCommand(State * state) : Command(state) {}
@@ -252,14 +234,8 @@ void DeleteItemCommand::deleteCurrentItem() {
 }
 
 void DeleteItemCommand::teardownDialog() {
-    clearBehindDialog();
+    clearBehindDialogForm();
     delete dialog;
-}
-
-void DeleteItemCommand::clearBehindDialog() {
-    Point ul(0, LINES - 1); Point lr(COLS - 1, LINES - 1);
-    Box dialogBox(ul, lr);
-    clearBox(dialogBox);
 }
 
 DeleteSectionCommand::DeleteSectionCommand(State * state) : Command(state) {}
@@ -311,13 +287,7 @@ void DeleteSectionCommand::addDefaultSection() {
 }
 
 void DeleteSectionCommand::teardownDialogs() {
-    clearBehindDialog();
+    clearBehindDialogForm();
     delete dialog1;
     delete dialog2;
-}
-
-void DeleteSectionCommand::clearBehindDialog() {
-    Point ul(0, LINES - 1); Point lr(COLS - 1, LINES - 1);
-    Box dialogBox(ul, lr);
-    clearBox(dialogBox);
 }

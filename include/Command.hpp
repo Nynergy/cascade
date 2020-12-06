@@ -7,6 +7,7 @@ protected:
 	State * state;
 
 	Command(State * state);
+    void clearBehindDialogForm();
 public:
 	virtual ~Command() {}
 	virtual void execute() = 0;
@@ -75,7 +76,6 @@ private:
     std::string getUserInput();
     void changeItemName(std::string input);
     void teardownEditBuffer();
-    void clearBehindForm();
 public:
     EditItemCommand(State * state);
     void execute() override;
@@ -90,7 +90,6 @@ private:
     std::string getUserInput();
     void changeSectionName(std::string input);
     void teardownEditBuffer();
-    void clearBehindForm();
 public:
     EditSectionCommand(State * state);
     void execute() override;
@@ -104,7 +103,6 @@ private:
     std::string getUserInput();
     void addItemToSection(std::string newItem);
     void teardownEditBuffer();
-    void clearBehindForm();
 public:
     NewItemCommand(State * state);
     void execute() override;
@@ -118,7 +116,6 @@ private:
     std::string getUserInput();
     void createNewSectionWithName(std::string name);
     void teardownEditBuffer();
-    void clearBehindForm();
 public:
     NewSectionCommand(State * state);
     void execute() override;
@@ -132,7 +129,6 @@ private:
     bool getUserChoice();
     void deleteCurrentItem();
     void teardownDialog();
-    void clearBehindDialog();
 public:
     DeleteItemCommand(State * state);
     void execute() override;
@@ -148,7 +144,6 @@ private:
     void deleteCurrentSection();
     void addDefaultSection();
     void teardownDialogs();
-    void clearBehindDialog();
 public:
     DeleteSectionCommand(State * state);
     void execute() override;
