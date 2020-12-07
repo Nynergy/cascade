@@ -10,6 +10,8 @@ private:
     Section section;
     int sectionColor;
     int highlightIndex;
+    int firstItemIndex;
+    int lastItemIndex;
 
     int convertColorCodeToAttribute(int code);
     void drawTitleBar();

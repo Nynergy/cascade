@@ -1,8 +1,10 @@
 #include "SectionPanel.hpp"
 
 SectionPanel::SectionPanel(Box globalDimensionsIn, Section sectionIn) :
-    Panel(globalDimensionsIn, sectionIn.title), section(sectionIn), highlightIndex(0) {
+    Panel(globalDimensionsIn, sectionIn.title), section(sectionIn), highlightIndex(0),
+    firstItemIndex(0) {
     sectionColor = convertColorCodeToAttribute(section.colorCode);
+    lastItemIndex = std::min((int)section.items.size(), lines - 1);
 }
 
 int SectionPanel::convertColorCodeToAttribute(int code) {
@@ -54,7 +56,9 @@ std::string SectionPanel::widenTitle() {
 
 void SectionPanel::drawItems() {
     int offset = 0;
-    for(std::string item : section.items) {
+    int bound = std::min(lastItemIndex, getNumItems());
+    for(int i = firstItemIndex; i < bound; i++) {
+        std::string item = section.items[i];
         std::string truncItem = truncateStringByLength(item, columns - 2);
         offset++;
         drawItemWithOffset(truncItem, offset);
@@ -79,11 +83,13 @@ void SectionPanel::drawPanelFocused() {
 
 void SectionPanel::drawItemsWithHighlight() {
     int offset = 0;
+    int bound = std::min(lastItemIndex, getNumItems());
     bool highlighted;
-    for(std::string item : section.items) {
+    for(int i = firstItemIndex; i < bound; i++) {
+        std::string item = section.items[i];
         std::string truncItem = truncateStringByLength(item, columns - 2);
         highlighted = false;
-        if(offset == highlightIndex) {
+        if(i == highlightIndex) {
             setAttributes(getAttribute("reverse"), win);
             highlighted = true;
         }
@@ -119,11 +125,24 @@ void SectionPanel::incrementHighlightIndex() {
         return;
     }
 
-    highlightIndex = (highlightIndex + 1) % section.items.size();
+    highlightIndex = std::min(highlightIndex + 1, getNumItems() - 1);
+    if(highlightIndex >= lastItemIndex) {
+        firstItemIndex++;
+        lastItemIndex++;
+    }
 }
 
 void SectionPanel::decrementHighlightIndex() {
-    highlightIndex = highlightIndex == 0 ? section.items.size() - 1 : highlightIndex - 1;
+    if(section.items.size() == 0) {
+        highlightIndex = -1;
+        return;
+    }
+
+    highlightIndex = std::max(highlightIndex - 1, 0);
+    if(highlightIndex < firstItemIndex) {
+        firstItemIndex--;
+        lastItemIndex--;
+    }
 }
 
 Section SectionPanel::getSection() {
@@ -166,6 +185,9 @@ void SectionPanel::resetIndices() {
     } else {
         highlightIndex = 0;
     }
+
+    firstItemIndex = 0;
+    lastItemIndex = std::min(getNumItems(), lines - 1);
 }
 
 int SectionPanel::getNumItems() {
@@ -178,8 +200,9 @@ void SectionPanel::addItem(std::string newItem) {
 }
 
 void SectionPanel::moveToEndOfItems() {
-    // TODO: This will become more complicated when item scrolling is added
     highlightIndex = (int)section.items.size() - 1;
+    lastItemIndex = highlightIndex + 1;
+    firstItemIndex = std::max(lastItemIndex - lines, 0);
 }
 
 void SectionPanel::incrementColorCode() {
