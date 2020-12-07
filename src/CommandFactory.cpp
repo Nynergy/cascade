@@ -25,6 +25,12 @@ Command * CommandFactory::getCommandFromKey(int key) {
 		case 'k':
 			command = new ScrollUpCommand(state);
 			break;
+        case 'g':
+            command = new JumpToBeginningCommand(state);
+            break;
+        case 'G':
+            command = new JumpToEndCommand(state);
+            break;
         case 'c':
             command = new CycleColorCommand(state);
             break;

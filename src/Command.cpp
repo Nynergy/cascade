@@ -36,7 +36,9 @@ void FocusPanelDownCommand::execute() {
 
 void FocusPanelDownCommand::incrementCurrentPanel() {
 	int currentPanelIndex = state->getCurrentPanelIndex();
-	state->setCurrentPanel(++currentPanelIndex);
+    int numPanels = (int)(state->getPanels()).size();
+    currentPanelIndex = std::min(currentPanelIndex + 1, numPanels - 1);
+	state->setCurrentPanel(currentPanelIndex);
 }
 
 FocusPanelUpCommand::FocusPanelUpCommand(State * state) : Command(state) {}
@@ -47,7 +49,8 @@ void FocusPanelUpCommand::execute() {
 
 void FocusPanelUpCommand::decrementCurrentPanel() {
 	int currentPanelIndex = state->getCurrentPanelIndex();
-	state->setCurrentPanel(--currentPanelIndex);
+    currentPanelIndex = std::max(currentPanelIndex - 1, 0);
+	state->setCurrentPanel(currentPanelIndex);
 }
 
 ScrollDownCommand::ScrollDownCommand(State * state) : Command(state) {}
@@ -62,6 +65,26 @@ ScrollUpCommand::ScrollUpCommand(State * state) : Command(state) {}
 void ScrollUpCommand::execute() {
     SectionPanel * panel = state->getCurrentPanel();
 	panel->scrollUp();
+}
+
+JumpToBeginningCommand::JumpToBeginningCommand(State * state) : Command(state) {}
+
+void JumpToBeginningCommand::execute() {
+    SectionPanel * panel = state->getCurrentPanel();
+    int numItems = panel->getNumItems();
+    if(numItems <= 0) { return; }
+
+    panel->moveToBeginningOfItems();
+}
+
+JumpToEndCommand::JumpToEndCommand(State * state) : Command(state) {}
+
+void JumpToEndCommand::execute() {
+    SectionPanel * panel = state->getCurrentPanel();
+    int numItems = panel->getNumItems();
+    if(numItems <= 0) { return; }
+
+    panel->moveToEndOfItems();
 }
 
 CycleColorCommand::CycleColorCommand(State * state) : Command(state) {}

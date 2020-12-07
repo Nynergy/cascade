@@ -26,7 +26,6 @@ private:
     void drawLowerIndicator();
     void drawItemsWithHighlight();
     std::string truncateStringByLength(std::string str, int length);
-    void moveToEndOfItems();
     void resetIndices();
 
 public:
@@ -46,5 +45,7 @@ public:
     void deleteCurrentItem();
     int getNumItems();
     void addItem(std::string newItem);
+    void moveToBeginningOfItems();
+    void moveToEndOfItems();
     void incrementColorCode();
 };

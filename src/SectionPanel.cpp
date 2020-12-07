@@ -231,6 +231,12 @@ void SectionPanel::addItem(std::string newItem) {
     moveToEndOfItems();
 }
 
+void SectionPanel::moveToBeginningOfItems() {
+    highlightIndex = 0;
+    firstItemIndex = 0;
+    lastItemIndex = std::min(getNumItems(), lines);
+}
+
 void SectionPanel::moveToEndOfItems() {
     highlightIndex = (int)section.items.size() - 1;
     lastItemIndex = highlightIndex + 1;

@@ -61,6 +61,18 @@ public:
 	void execute() override;
 };
 
+class JumpToBeginningCommand : public Command {
+public:
+    JumpToBeginningCommand(State * state);
+    void execute() override;
+};
+
+class JumpToEndCommand : public Command {
+public:
+    JumpToEndCommand(State * state);
+    void execute() override;
+};
+
 class CycleColorCommand : public Command {
 public:
     CycleColorCommand(State * state);
