@@ -48,4 +48,6 @@ public:
     void moveToBeginningOfItems();
     void moveToEndOfItems();
     void incrementColorCode();
+    void swapItemDown();
+    void swapItemUp();
 };

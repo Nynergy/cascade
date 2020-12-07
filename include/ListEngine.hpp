@@ -18,8 +18,10 @@ private:
     bool isRelativePath(std::string path);
     std::vector<Section> defaultList();
     void passPanelsToState(std::vector<SectionPanel *> panels);
-    void renderPanels();
     void handleInput(int key);
+    void renderPanels();
+    void renderModeIndicator();
+    void clearModeIndicator();
 
 public:
     ListEngine(std::string listPathIn);

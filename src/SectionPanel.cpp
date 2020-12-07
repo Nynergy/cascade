@@ -248,3 +248,21 @@ void SectionPanel::incrementColorCode() {
     section.colorCode = code;
     sectionColor = convertColorCodeToAttribute(code);
 }
+
+void SectionPanel::swapItemDown() {
+    if(highlightIndex == (getNumItems() - 1)) {
+        return;
+    }
+
+    std::swap(section.items[highlightIndex], section.items[highlightIndex + 1]);
+    incrementHighlightIndex();
+}
+
+void SectionPanel::swapItemUp() {
+    if(highlightIndex == 0) {
+        return;
+    }
+
+    std::swap(section.items[highlightIndex - 1], section.items[highlightIndex]);
+    decrementHighlightIndex();
+}

@@ -314,3 +314,34 @@ void DeleteSectionCommand::teardownDialogs() {
     delete dialog1;
     delete dialog2;
 }
+
+ToggleMoveModeCommand::ToggleMoveModeCommand(State * state) : Command(state) {}
+
+void ToggleMoveModeCommand::execute() {
+    Mode currentMode = state->getMode();
+    if(currentMode == Mode::MOVE) {
+        state->setMode(Mode::NORMAL);
+    } else {
+        state->setMode(Mode::MOVE);
+    }
+}
+
+MoveItemDownCommand::MoveItemDownCommand(State * state) : Command(state) {}
+
+void MoveItemDownCommand::execute() {
+    SectionPanel * panel = state->getCurrentPanel();
+    int numItems = panel->getNumItems();
+    if(numItems <= 1) { return; } // Note the 1 here instead of 0
+
+    panel->swapItemDown();
+}
+
+MoveItemUpCommand::MoveItemUpCommand(State * state) : Command(state) {}
+
+void MoveItemUpCommand::execute() {
+    SectionPanel * panel = state->getCurrentPanel();
+    int numItems = panel->getNumItems();
+    if(numItems <= 1) { return; } // Note the 1 here instead of 0
+
+    panel->swapItemUp();
+}

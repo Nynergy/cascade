@@ -160,3 +160,21 @@ public:
     DeleteSectionCommand(State * state);
     void execute() override;
 };
+
+class ToggleMoveModeCommand : public Command {
+public:
+    ToggleMoveModeCommand(State * state);
+    void execute() override;
+};
+
+class MoveItemDownCommand : public Command {
+public:
+    MoveItemDownCommand(State * state);
+    void execute() override;
+};
+
+class MoveItemUpCommand : public Command {
+public:
+    MoveItemUpCommand(State * state);
+    void execute() override;
+};

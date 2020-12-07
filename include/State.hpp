@@ -2,12 +2,18 @@
 
 #include "SectionPanel.hpp"
 
+enum Mode {
+    NORMAL = 0,
+    MOVE,
+};
+
 class State {
 
 private:
 	std::vector<SectionPanel *> panels;
 	int currentPanel;
 	bool exitFlag;
+    Mode mode;
 
 	int wrapIndex(int index);
     void resetIndices();
@@ -27,5 +33,7 @@ public:
 	void setExitFlag(bool flag);
 	bool userHasQuit();
 	bool userHasNotQuit();
+    Mode getMode();
+    void setMode(Mode newMode);
 
 };

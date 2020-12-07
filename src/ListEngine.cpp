@@ -89,7 +89,14 @@ void ListEngine::run() {
         key = getch();
         handleInput(key);
         renderPanels();
+        renderModeIndicator();
     }
+}
+
+void ListEngine::handleInput(int key) {
+    Command * command = commandFactory->getCommandFromKey(key);
+    command->execute();
+    delete command;
 }
 
 void ListEngine::renderPanels() {
@@ -102,8 +109,28 @@ void ListEngine::renderPanels() {
     }
 }
 
-void ListEngine::handleInput(int key) {
-    Command * command = commandFactory->getCommandFromKey(key);
-    command->execute();
-    delete command;
+void ListEngine::renderModeIndicator() {
+    clearModeIndicator();
+
+    Mode currentMode = state->getMode();
+    switch(currentMode) {
+        case Mode::NORMAL:
+            break;
+        case Mode::MOVE:
+            {
+                Point modePoint(COLS - 11, LINES - 1);
+                setAttributes(getAttribute("reverse"));
+                drawStringAtPoint(" MOVE MODE ", modePoint);
+                unsetAttributes(getAttribute("reverse"));
+            }
+            break;
+        default:
+            break;
+    }
+}
+
+void ListEngine::clearModeIndicator() {
+    Point ul(0, LINES - 1); Point lr(COLS - 1, LINES - 1);
+    Box modeBox(ul, lr);
+    clearBox(modeBox);
 }

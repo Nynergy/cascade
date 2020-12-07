@@ -1,6 +1,6 @@
 #include "State.hpp"
 
-State::State() : exitFlag(false) {}
+State::State() : exitFlag(false), mode(Mode::NORMAL) {}
 
 State::~State() {
 	for(SectionPanel * panel : panels) {
@@ -82,4 +82,12 @@ bool State::userHasQuit() {
 
 bool State::userHasNotQuit() {
 	return !userHasQuit();
+}
+
+Mode State::getMode() {
+    return mode;
+}
+
+void State::setMode(Mode newMode) {
+    mode = newMode;
 }
