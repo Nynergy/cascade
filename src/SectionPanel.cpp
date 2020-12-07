@@ -16,6 +16,7 @@ void SectionPanel::drawPanel() {
     clearScreen();
     drawTitleBar();
     drawItems();
+    drawIndicators();
     refreshWindow();
 }
 
@@ -67,17 +68,48 @@ void SectionPanel::drawItems() {
 
 void SectionPanel::drawItemWithOffset(std::string item, int offset) {
     // Draw item bar, then item name, so it spans the whole screen
-    Point a(0, offset); Point b(columns, offset);
+    Point a(2, offset); Point b(columns, offset);
     drawCustomHLineBetweenPoints(' ', a, b, win);
 
-    Point itemPoint(0, offset);
+    Point itemPoint(2, offset);
     drawStringAtPoint(item, itemPoint, win);
+}
+
+void SectionPanel::drawIndicators() {
+    drawVerticalIndicatorLine();
+
+    if(firstItemIndex > 0) {
+        drawUpperIndicator();
+    }
+    if(lastItemIndex < getNumItems()) {
+        drawLowerIndicator();
+    }
+}
+
+void SectionPanel::drawVerticalIndicatorLine() {
+    Point a(0, 1); Point b(0, lines);
+    drawVLineBetweenPoints(a, b, win);
+}
+
+void SectionPanel::drawUpperIndicator() {
+    Point p(0, 1);
+    setAttributes(getAttribute("alternate"), win);
+    drawCharAtPoint(ACS_UARROW, p, win);
+    unsetAttributes(getAttribute("alternate"), win);
+}
+
+void SectionPanel::drawLowerIndicator() {
+    Point p(0, lines);
+    setAttributes(getAttribute("alternate"), win);
+    drawCharAtPoint(ACS_DARROW, p, win);
+    unsetAttributes(getAttribute("alternate"), win);
 }
 
 void SectionPanel::drawPanelFocused() {
     clearScreen();
     drawTitleBar();
     drawItemsWithHighlight();
+    drawIndicators();
     refreshWindow();
 }
 

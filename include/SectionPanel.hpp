@@ -20,6 +20,10 @@ private:
     std::string widenTitle();
     void drawItems();
     void drawItemWithOffset(std::string item, int offset);
+    void drawIndicators();
+    void drawVerticalIndicatorLine();
+    void drawUpperIndicator();
+    void drawLowerIndicator();
     void drawItemsWithHighlight();
     std::string truncateStringByLength(std::string str, int length);
     void moveToEndOfItems();
