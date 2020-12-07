@@ -8,6 +8,12 @@ void Command::clearBehindDialogForm() {
     clearBox(box);
 }
 
+bool Command::checkForNumItems(int minimum) {
+    SectionPanel * panel = state->getCurrentPanel();
+    int numItems = panel->getNumItems();
+    return numItems > minimum;
+}
+
 NOPCommand::NOPCommand(State * state) : Command(state) {}
 
 void NOPCommand::execute() {
@@ -70,20 +76,20 @@ void ScrollUpCommand::execute() {
 JumpToBeginningCommand::JumpToBeginningCommand(State * state) : Command(state) {}
 
 void JumpToBeginningCommand::execute() {
-    SectionPanel * panel = state->getCurrentPanel();
-    int numItems = panel->getNumItems();
-    if(numItems <= 0) { return; }
+    bool enoughItems = checkForNumItems(0);
+    if(!enoughItems) { return; }
 
+    SectionPanel * panel = state->getCurrentPanel();
     panel->moveToBeginningOfItems();
 }
 
 JumpToEndCommand::JumpToEndCommand(State * state) : Command(state) {}
 
 void JumpToEndCommand::execute() {
-    SectionPanel * panel = state->getCurrentPanel();
-    int numItems = panel->getNumItems();
-    if(numItems <= 0) { return; }
+    bool enoughItems = checkForNumItems(0);
+    if(!enoughItems) { return; }
 
+    SectionPanel * panel = state->getCurrentPanel();
     panel->moveToEndOfItems();
 }
 
@@ -97,9 +103,8 @@ void CycleColorCommand::execute() {
 EditItemCommand::EditItemCommand(State * state) : Command(state) {}
 
 void EditItemCommand::execute() {
-    SectionPanel * panel = state->getCurrentPanel();
-    int numItems = panel->getNumItems();
-    if(numItems <= 0) { return; }
+    bool enoughItems = checkForNumItems(0);
+    if(!enoughItems) { return; }
 
     setupEditBuffer();
     std::string input = getUserInput();
@@ -230,9 +235,8 @@ void NewSectionCommand::teardownEditBuffer() {
 DeleteItemCommand::DeleteItemCommand(State * state) : Command(state) {}
 
 void DeleteItemCommand::execute() {
-    SectionPanel * panel = state->getCurrentPanel();
-    int numItems = panel->getNumItems();
-    if(numItems <= 0) { return; }
+    bool enoughItems = checkForNumItems(0);
+    if(!enoughItems) { return; }
 
     setupDialog();
     bool agree = getUserChoice();
@@ -329,19 +333,19 @@ void ToggleMoveModeCommand::execute() {
 MoveItemDownCommand::MoveItemDownCommand(State * state) : Command(state) {}
 
 void MoveItemDownCommand::execute() {
-    SectionPanel * panel = state->getCurrentPanel();
-    int numItems = panel->getNumItems();
-    if(numItems <= 1) { return; } // Note the 1 here instead of 0
+    bool enoughItems = checkForNumItems(1);
+    if(!enoughItems) { return; }
 
+    SectionPanel * panel = state->getCurrentPanel();
     panel->swapItemDown();
 }
 
 MoveItemUpCommand::MoveItemUpCommand(State * state) : Command(state) {}
 
 void MoveItemUpCommand::execute() {
-    SectionPanel * panel = state->getCurrentPanel();
-    int numItems = panel->getNumItems();
-    if(numItems <= 1) { return; } // Note the 1 here instead of 0
+    bool enoughItems = checkForNumItems(1);
+    if(!enoughItems) { return; }
 
+    SectionPanel * panel = state->getCurrentPanel();
     panel->swapItemUp();
 }

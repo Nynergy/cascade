@@ -21,9 +21,9 @@ private:
     void drawItems();
     void drawItemWithOffset(std::string item, int offset);
     void drawIndicators();
-    void drawVerticalIndicatorLine();
-    void drawUpperIndicator();
-    void drawLowerIndicator();
+    void drawVerticalIndicatorLines();
+    void drawUpperIndicators();
+    void drawLowerIndicators();
     void drawItemsWithHighlight();
     std::string truncateStringByLength(std::string str, int length);
     void resetIndices();

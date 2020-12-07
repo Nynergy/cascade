@@ -8,6 +8,7 @@ protected:
 
 	Command(State * state);
     void clearBehindDialogForm();
+    bool checkForNumItems(int minimum);
 public:
 	virtual ~Command() {}
 	virtual void execute() = 0;

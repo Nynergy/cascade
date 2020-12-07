@@ -68,7 +68,7 @@ void SectionPanel::drawItems() {
 
 void SectionPanel::drawItemWithOffset(std::string item, int offset) {
     // Draw item bar, then item name, so it spans the whole screen
-    Point a(2, offset); Point b(columns, offset);
+    Point a(2, offset); Point b(columns - 2, offset);
     drawCustomHLineBetweenPoints(' ', a, b, win);
 
     Point itemPoint(2, offset);
@@ -76,32 +76,37 @@ void SectionPanel::drawItemWithOffset(std::string item, int offset) {
 }
 
 void SectionPanel::drawIndicators() {
-    drawVerticalIndicatorLine();
+    drawVerticalIndicatorLines();
 
     if(firstItemIndex > 0) {
-        drawUpperIndicator();
+        drawUpperIndicators();
     }
     if(lastItemIndex < getNumItems()) {
-        drawLowerIndicator();
+        drawLowerIndicators();
     }
 }
 
-void SectionPanel::drawVerticalIndicatorLine() {
+void SectionPanel::drawVerticalIndicatorLines() {
     Point a(0, 1); Point b(0, lines);
     drawVLineBetweenPoints(a, b, win);
+
+    Point c(columns, 1); Point d(columns, lines);
+    drawVLineBetweenPoints(c, d, win);
 }
 
-void SectionPanel::drawUpperIndicator() {
-    Point p(0, 1);
+void SectionPanel::drawUpperIndicators() {
+    Point p1(0, 1); Point p2(columns, 1);
     setAttributes(getAttribute("alternate"), win);
-    drawCharAtPoint(ACS_UARROW, p, win);
+    drawCharAtPoint(ACS_UARROW, p1, win);
+    drawCharAtPoint(ACS_UARROW, p2, win);
     unsetAttributes(getAttribute("alternate"), win);
 }
 
-void SectionPanel::drawLowerIndicator() {
-    Point p(0, lines);
+void SectionPanel::drawLowerIndicators() {
+    Point p1(0, lines); Point p2(columns, lines);
     setAttributes(getAttribute("alternate"), win);
-    drawCharAtPoint(ACS_DARROW, p, win);
+    drawCharAtPoint(ACS_DARROW, p1, win);
+    drawCharAtPoint(ACS_DARROW, p2, win);
     unsetAttributes(getAttribute("alternate"), win);
 }
 
@@ -136,7 +141,7 @@ void SectionPanel::drawItemsWithHighlight() {
 std::string SectionPanel::truncateStringByLength(std::string str, int length) {
     int stringLength = str.size();
     if(stringLength >= length) {
-        std::string truncStr = str.substr(0, length - 3);
+        std::string truncStr = str.substr(0, length - 4);
         return truncStr + "...";
     }
 
