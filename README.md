@@ -108,13 +108,11 @@ the default location of the config, go into the source code and change it
 yourself, you're more than welcome to.
 
 Once it's found that file, it will parse it and load the configuration
-settings into the program. At the moment there are only two configurable
-options: MasterList tells cascade where to find the master list to read from
-upon normal startup, and DefaultSectionColor tells cascade what color to give
-newly-created sections by default.
+settings into the program. To see a list of configurable options, just run
+`cascade -h config` on the command line.
 
-MasterList must be defined if you are not supplying a file via command line,
-so make sure that is set in the config file.
+__NOTE:__ MasterList must be defined if you are not supplying a file via
+command line, so make sure that is set in the config file.
 
 # How do I use it?
 
@@ -145,6 +143,9 @@ Key | Action
 <kbd>J</kbd> and <kbd>K</kbd> | move focused section up and down
 <kbd>m</kbd> | exit MOVE mode
 <kbd>s</kbd> | save any unsaved changes
+
+To see a list of keybindings on the command line, just run
+`cascade -h keybindings`
 
 # Now what?
 
