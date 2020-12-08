@@ -54,6 +54,5 @@ clean:
 run: all
 	./$(BIN)
 
-# Run executable with valgrind for memory leak analysis
-memcheck: all
-	valgrind -v ./$(BIN)
+install: all
+	cp $(BIN) /usr/bin/
