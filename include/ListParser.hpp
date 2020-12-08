@@ -18,8 +18,6 @@ private:
     bool isEndOfSection(std::string line);
 
 public:
-    bool missingList = false;
-
     ListParser(std::string listPath);
     ~ListParser();
     std::vector<Section> parseList();

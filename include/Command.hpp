@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Config.hpp"
 #include "DialogForm.hpp"
 
 class Command {
@@ -128,6 +129,7 @@ private:
     void setupEditBuffer();
     std::string getUserInput();
     void createNewSectionWithName(std::string name);
+    int getCodeFromColorStr(std::string colorStr);
     void teardownEditBuffer();
 public:
     NewSectionCommand(State * state);
@@ -156,6 +158,7 @@ private:
     bool getUserChoice();
     void deleteCurrentSection();
     void addDefaultSection();
+    int getCodeFromColorStr(std::string colorStr);
     void teardownDialogs();
 public:
     DeleteSectionCommand(State * state);
@@ -177,5 +180,17 @@ public:
 class MoveItemUpCommand : public Command {
 public:
     MoveItemUpCommand(State * state);
+    void execute() override;
+};
+
+class MoveSectionDownCommand : public Command {
+public:
+    MoveSectionDownCommand(State * state);
+    void execute() override;
+};
+
+class MoveSectionUpCommand : public Command {
+public:
+    MoveSectionUpCommand(State * state);
     void execute() override;
 };

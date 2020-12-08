@@ -38,11 +38,7 @@ std::vector<Section> ListEngine::getSectionsFromList() {
     try {
         listPath = convertToAbsolutePath(listPath);
         ListParser parser = ListParser(listPath);
-        if(parser.missingList) {
-            sections = defaultList();
-        } else {
-            sections = parser.parseList();
-        }
+        sections = parser.parseList();
     } catch(InvalidFileException& e) {
         throw InvalidFileException(e.what());
     }
@@ -66,14 +62,6 @@ bool ListEngine::isRelativePath(std::string path) {
     std::string firstChar = path.substr(0, 1);
 
     return firstChar == "~";
-}
-
-std::vector<Section> ListEngine::defaultList() {
-    Section defaultSection("TODO", 7);
-    std::vector<Section> sections;
-    sections.push_back(defaultSection);
-
-    return sections;
 }
 
 void ListEngine::passPanelsToState(std::vector<SectionPanel *> panels) {

@@ -26,16 +26,17 @@ bool pathExists(std::string path) {
 }
 
 void ensureDirectoryExists(std::string directoryPath) {
-    if(!pathExists(directoryPath)) {
+    if(pathExists(directoryPath) != 0) {
         int permissions = S_IRUSR | S_IWUSR | S_IXUSR;
         mkdir(directoryPath.c_str(), permissions);
     }
 }
 
 void ensureFileExists(std::string path, std::string filename) {
-    if(!pathExists(filename)) {
+    if(pathExists(filename) != 0) {
         std::ofstream configFile(path);
         configFile << "MasterList = ~/.cascade/master.todo" << std::endl;
+        configFile << "DefaultSectionColor = white" << std::endl;
         configFile.close();
     }
 }
@@ -78,6 +79,13 @@ int main(int argc, char ** argv) {
         listPath = argv[1];
     } else {
         listPath = Config::getInstance().getValueFromKey("MasterList");
+        if(listPath == "") {
+            std::cerr << "User has not specified a master list file in the configuration file." << std::endl;
+            std::cerr << "Configuration file should be located in " + getDefaultConfigPath() << std::endl;
+            std::cerr << "To see how to specify a master list, run 'cascade -h config'" << std::endl;
+
+            return 1;
+        }
     }
     
     ListEngine * engine = new ListEngine(listPath);
@@ -89,12 +97,19 @@ int main(int argc, char ** argv) {
         delete engine;
         std::cerr << "*** ERROR IN ENGINE ***" << std::endl;
         std::cerr << "InvalidFileException: " << e.what() << std::endl;
+        std::cerr << "File located at: " << listPath << std::endl;
 
         return 1;
     } catch(InvalidRatioException& e) {
         delete engine;
         std::cerr << "*** ERROR IN ENGINE ***" << std::endl;
         std::cerr << "InvalidRatioException: " << e.what() << std::endl;
+
+        return 1;
+    } catch(std::exception& e) {
+        delete engine;
+        std::cerr << "*** ERROR IN ENGINE ***" << std::endl;
+        std::cerr << "Exception: " << e.what() << std::endl;
 
         return 1;
     }

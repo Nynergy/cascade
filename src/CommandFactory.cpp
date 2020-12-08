@@ -68,6 +68,12 @@ Command * CommandFactory::getCommandFromKey(int key) {
             case 'q':
                 command = new QuitApplicationCommand(state);
                 break;
+            case 'J':
+                command = new MoveSectionDownCommand(state);
+                break;
+            case 'K':
+                command = new MoveSectionUpCommand(state);
+                break;
             case 'j':
                 command = new MoveItemDownCommand(state);
                 break;

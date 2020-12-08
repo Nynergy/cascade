@@ -23,6 +23,7 @@ public:
 	~State();
 	void addPanel(SectionPanel * panel);
 	std::vector<SectionPanel *> getPanels();
+    int getNumPanels();
     void replacePanels(std::vector<SectionPanel *> newPanels);
 	void setCurrentPanel(int panelIndex);
 	SectionPanel * getCurrentPanel();
@@ -35,5 +36,7 @@ public:
 	bool userHasNotQuit();
     Mode getMode();
     void setMode(Mode newMode);
+    void swapPanelDown();
+    void swapPanelUp();
 
 };

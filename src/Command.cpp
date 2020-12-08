@@ -220,11 +220,32 @@ std::string NewSectionCommand::getUserInput() {
 }
 
 void NewSectionCommand::createNewSectionWithName(std::string name) {
-    Section newSection(name, 7); // TODO: Default color code will be config-specified
+    std::string colorStr = Config::getInstance().getValueFromKey("DefaultSectionColor");
+    int colorCode = getCodeFromColorStr(colorStr);
+
+    Section newSection(name, colorCode);
     std::vector<Section> sections = state->getSections();
     sections.push_back(newSection);
     std::vector<SectionPanel *> newPanels = PanelConstructor::constructPanelsFromSections(sections);
     state->replacePanels(newPanels);
+}
+
+int NewSectionCommand::getCodeFromColorStr(std::string colorStr) {
+    if(colorStr == "red") {
+        return 1;
+    } else if(colorStr == "green") {
+        return 2;
+    } else if(colorStr == "yellow") {
+        return 3;
+    } else if(colorStr == "blue") {
+        return 4;
+    } else if(colorStr == "magenta") {
+        return 5;
+    } else if(colorStr == "cyan") {
+        return 6;
+    } else {
+        return 7; // white is the default
+    }
 }
 
 void NewSectionCommand::teardownEditBuffer() {
@@ -306,11 +327,32 @@ void DeleteSectionCommand::deleteCurrentSection() {
 }
 
 void DeleteSectionCommand::addDefaultSection() {
-    Section newSection("TODO", 7); // TODO: Default color code will be config-specified
+    std::string colorStr = Config::getInstance().getValueFromKey("DefaultSectionColor");
+    int colorCode = getCodeFromColorStr(colorStr);
+
+    Section newSection("TODO", colorCode);
     std::vector<Section> sections = state->getSections();
     sections.push_back(newSection);
     std::vector<SectionPanel *> newPanels = PanelConstructor::constructPanelsFromSections(sections);
     state->replacePanels(newPanels);
+}
+
+int DeleteSectionCommand::getCodeFromColorStr(std::string colorStr) {
+    if(colorStr == "red") {
+        return 1;
+    } else if(colorStr == "green") {
+        return 2;
+    } else if(colorStr == "yellow") {
+        return 3;
+    } else if(colorStr == "blue") {
+        return 4;
+    } else if(colorStr == "magenta") {
+        return 5;
+    } else if(colorStr == "cyan") {
+        return 6;
+    } else {
+        return 7; // white is the default
+    }
 }
 
 void DeleteSectionCommand::teardownDialogs() {
@@ -348,4 +390,30 @@ void MoveItemUpCommand::execute() {
 
     SectionPanel * panel = state->getCurrentPanel();
     panel->swapItemUp();
+}
+
+MoveSectionDownCommand::MoveSectionDownCommand(State * state) : Command(state) {}
+
+void MoveSectionDownCommand::execute() {
+    int numPanels = state->getNumPanels();
+    if(numPanels <= 1) { return; }
+
+    state->swapPanelDown();
+
+    Command * resize = new ResizeWindowCommand(state);
+    resize->execute();
+    delete resize;
+}
+
+MoveSectionUpCommand::MoveSectionUpCommand(State * state) : Command(state) {}
+
+void MoveSectionUpCommand::execute() {
+    int numPanels = state->getNumPanels();
+    if(numPanels <= 1) { return; }
+
+    state->swapPanelUp();
+
+    Command * resize = new ResizeWindowCommand(state);
+    resize->execute();
+    delete resize;
 }

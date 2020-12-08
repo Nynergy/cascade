@@ -16,6 +16,10 @@ std::vector<SectionPanel *> State::getPanels() {
 	return panels;
 }
 
+int State::getNumPanels() {
+    return (int)panels.size();
+}
+
 void State::replacePanels(std::vector<SectionPanel *> newPanels) {
     for(SectionPanel * panel : panels) {
         delete panel;
@@ -90,4 +94,22 @@ Mode State::getMode() {
 
 void State::setMode(Mode newMode) {
     mode = newMode;
+}
+
+void State::swapPanelDown() {
+    if(currentPanel == (getNumPanels() - 1)) {
+        return;
+    }
+
+    std::swap(panels[currentPanel], panels[currentPanel + 1]);
+    currentPanel++;
+}
+
+void State::swapPanelUp() {
+    if(currentPanel == 0) {
+        return;
+    }
+
+    std::swap(panels[currentPanel - 1], panels[currentPanel]);
+    currentPanel--;
 }

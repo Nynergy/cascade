@@ -4,7 +4,7 @@ ListParser::ListParser(std::string listPath) {
     try {
         fproc = new FileProcessor(listPath);
     } catch(InvalidFileException& e) {
-        missingList = true;
+        throw InvalidFileException(e.what());
     }
 }
 

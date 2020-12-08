@@ -1,7 +1,6 @@
 #pragma once
 
 #include "CommandFactory.hpp"
-#include "Config.hpp"
 #include "ListParser.hpp"
 
 class ListEngine : public Engine {
@@ -16,7 +15,6 @@ private:
     std::vector<Section> getSectionsFromList();
     std::string convertToAbsolutePath(std::string path);
     bool isRelativePath(std::string path);
-    std::vector<Section> defaultList();
     void passPanelsToState(std::vector<SectionPanel *> panels);
     void handleInput(int key);
     void renderPanels();
