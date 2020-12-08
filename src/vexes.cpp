@@ -427,6 +427,7 @@ std::string Form::edit() {
 
 void Form::handleInput(int ch) {
     switch(ch) {
+        case KEY_BACKSPACE:
         case 127: // Backspace Key
             removeCharFromBuffer();
             break;
