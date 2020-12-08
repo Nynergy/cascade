@@ -2,6 +2,7 @@
 
 #include "Config.hpp"
 #include "DialogForm.hpp"
+#include "ListSerializer.hpp"
 
 class Command {
 protected:
@@ -28,9 +29,21 @@ public:
 };
 
 class QuitApplicationCommand : public Command {
+private:
+    DialogForm * dialog;
+
+    void setupDialog();
+    bool getUserChoice();
+    void teardownDialog();
 public:
 	QuitApplicationCommand(State * state);
 	void execute() override;
+};
+
+class SaveFileCommand : public Command {
+public:
+    SaveFileCommand(State * state);
+    void execute() override;
 };
 
 class FocusPanelDownCommand : public Command {

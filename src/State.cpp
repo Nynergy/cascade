@@ -1,6 +1,7 @@
 #include "State.hpp"
 
-State::State() : exitFlag(false), mode(Mode::NORMAL) {}
+State::State(std::string listPathIn) :
+    listPath(listPathIn), exitFlag(false), mode(Mode::NORMAL), unsavedChanges(false) {}
 
 State::~State() {
 	for(SectionPanel * panel : panels) {
@@ -112,4 +113,20 @@ void State::swapPanelUp() {
 
     std::swap(panels[currentPanel - 1], panels[currentPanel]);
     currentPanel--;
+}
+
+bool State::userHasUnsavedChanges() {
+    return unsavedChanges;
+}
+
+void State::changesMade() {
+    unsavedChanges = true;
+}
+
+void State::changesSaved() {
+    unsavedChanges = false;
+}
+
+std::string State::getListPath() {
+    return listPath;
 }

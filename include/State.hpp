@@ -12,14 +12,16 @@ class State {
 private:
 	std::vector<SectionPanel *> panels;
 	int currentPanel;
+    std::string listPath;
 	bool exitFlag;
     Mode mode;
+    bool unsavedChanges;
 
 	int wrapIndex(int index);
     void resetIndices();
 
 public:
-	State();
+	State(std::string listPathIn);
 	~State();
 	void addPanel(SectionPanel * panel);
 	std::vector<SectionPanel *> getPanels();
@@ -38,5 +40,9 @@ public:
     void setMode(Mode newMode);
     void swapPanelDown();
     void swapPanelUp();
+    bool userHasUnsavedChanges();
+    void changesMade();
+    void changesSaved();
+    std::string getListPath();
 
 };

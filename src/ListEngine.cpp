@@ -1,7 +1,7 @@
 #include "ListEngine.hpp"
 
 ListEngine::ListEngine(std::string listPathIn) : listPath(listPathIn) {
-    state = new State();
+    state = new State(listPathIn);
     commandFactory = new CommandFactory(state);
 }
 

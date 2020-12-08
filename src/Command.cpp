@@ -31,7 +31,38 @@ void ResizeWindowCommand::execute() {
 QuitApplicationCommand::QuitApplicationCommand(State * state) : Command(state) {}
 
 void QuitApplicationCommand::execute() {
+    if(state->userHasUnsavedChanges()) {
+        setupDialog();
+        bool saveFile = getUserChoice();
+        if(saveFile) {
+            Command * save = new SaveFileCommand(state);
+            save->execute();
+            delete save;
+        }
+        teardownDialog();
+    }
 	state->setExitFlag(true);
+}
+
+void QuitApplicationCommand::setupDialog() {
+    dialog = new DialogForm("Save changes before quitting? (y/n)", state);
+}
+
+bool QuitApplicationCommand::getUserChoice() {
+    bool userChoice = dialog->dialog();
+    return userChoice;
+}
+
+void QuitApplicationCommand::teardownDialog() {
+    clearBehindDialogForm();
+    delete dialog;
+}
+
+SaveFileCommand::SaveFileCommand(State * state) : Command(state) {}
+
+void SaveFileCommand::execute() {
+    ListSerializer::serializeListToFile(state);
+    state->changesSaved();
 }
 
 FocusPanelDownCommand::FocusPanelDownCommand(State * state) : Command(state) {}
@@ -98,6 +129,8 @@ CycleColorCommand::CycleColorCommand(State * state) : Command(state) {}
 void CycleColorCommand::execute() {
     SectionPanel * panel = state->getCurrentPanel();
     panel->incrementColorCode();
+
+    state->changesMade();
 }
 
 EditItemCommand::EditItemCommand(State * state) : Command(state) {}
@@ -110,6 +143,8 @@ void EditItemCommand::execute() {
     std::string input = getUserInput();
     changeItemName(input);
     teardownEditBuffer();
+
+    state->changesMade();
 }
 
 void EditItemCommand::setupEditBuffer() {
@@ -145,6 +180,8 @@ void EditSectionCommand::execute() {
     std::string input = getUserInput();
     changeSectionName(input);
     teardownEditBuffer();
+
+    state->changesMade();
 }
 
 void EditSectionCommand::setupEditBuffer() {
@@ -180,6 +217,8 @@ void NewItemCommand::execute() {
     std::string input = getUserInput();
     addItemToSection(input);
     teardownEditBuffer();
+
+    state->changesMade();
 }
 
 void NewItemCommand::setupEditBuffer() {
@@ -208,6 +247,8 @@ void NewSectionCommand::execute() {
     std::string input = getUserInput();
     createNewSectionWithName(input);
     teardownEditBuffer();
+
+    state->changesMade();
 }
 
 void NewSectionCommand::setupEditBuffer() {
@@ -263,6 +304,7 @@ void DeleteItemCommand::execute() {
     bool agree = getUserChoice();
     if(agree) {
         deleteCurrentItem();
+        state->changesMade();
     }
     teardownDialog();
 }
@@ -293,6 +335,7 @@ void DeleteSectionCommand::execute() {
     bool agree = getUserChoice();
     if(agree) {
         deleteCurrentSection();
+        state->changesMade();
     }
     teardownDialogs();
 }
@@ -380,6 +423,8 @@ void MoveItemDownCommand::execute() {
 
     SectionPanel * panel = state->getCurrentPanel();
     panel->swapItemDown();
+
+    state->changesMade();
 }
 
 MoveItemUpCommand::MoveItemUpCommand(State * state) : Command(state) {}
@@ -390,6 +435,8 @@ void MoveItemUpCommand::execute() {
 
     SectionPanel * panel = state->getCurrentPanel();
     panel->swapItemUp();
+
+    state->changesMade();
 }
 
 MoveSectionDownCommand::MoveSectionDownCommand(State * state) : Command(state) {}
@@ -403,6 +450,8 @@ void MoveSectionDownCommand::execute() {
     Command * resize = new ResizeWindowCommand(state);
     resize->execute();
     delete resize;
+
+    state->changesMade();
 }
 
 MoveSectionUpCommand::MoveSectionUpCommand(State * state) : Command(state) {}
@@ -416,4 +465,6 @@ void MoveSectionUpCommand::execute() {
     Command * resize = new ResizeWindowCommand(state);
     resize->execute();
     delete resize;
+
+    state->changesMade();
 }

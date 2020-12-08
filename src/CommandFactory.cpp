@@ -12,6 +12,9 @@ Command * CommandFactory::getCommandFromKey(int key) {
             case 'q':
                 command = new QuitApplicationCommand(state);
                 break;
+            case 's':
+                command = new SaveFileCommand(state);
+                break;
             case 'J':
             case '\t':
                 command = new FocusPanelDownCommand(state);
@@ -67,6 +70,9 @@ Command * CommandFactory::getCommandFromKey(int key) {
                 break;
             case 'q':
                 command = new QuitApplicationCommand(state);
+                break;
+            case 's':
+                command = new SaveFileCommand(state);
                 break;
             case 'J':
                 command = new MoveSectionDownCommand(state);
