@@ -9,7 +9,7 @@ A simple and customizable todo-list for the terminal.
 Seen above is an image of cascade in use. You can find it in the top left
 corner of the screenshot.
 
-# What is cascade and why does it exist?
+## What is cascade and why does it exist?
 
 _cascade_ is a lightweight todo-list application built on top of ncurses,
 using my personal [vexes library](https://github.com/Nynergy/vexes) as a base
@@ -27,7 +27,7 @@ is not incorrect. But I hope you'll come to agree that cascade, while it isn't
 as feature-rich as calcurse, is just as simple, if not simpler, and just as
 appealing an option for your everyday todo-list needs.
 
-# What exactly does it do?
+## What exactly does it do?
 
 It reads a file containing formatted todo-list information and renders that
 information to the terminal screen in a dynamic, customizable way. It can
@@ -40,7 +40,7 @@ allow the user to use it outside of todo-list purposes. At the end of the day,
 it's really just a program that dynamically renders user-created panels to the
 screen, so do whatever you want with it.
 
-# How can I compile and run it?
+## How can I compile and run it?
 
 Once you've cloned the repo, to compile cascade, simply run `make` in the base
 directory. This should create a binary executable called `cascade`, which you
@@ -62,7 +62,7 @@ To see a help menu, simply run `cascade -h` or `cascade --help` or even supply
 an optional help topic, such as 'keybindings' or 'config', like so:
 `cascade -h keybindings`
 
-# What are these .todo files it uses?
+## What are these .todo files it uses?
 
 The extension is just an arbitrary one that made sense for the program. What
 matters about the list files is the format. If the file is not properly
@@ -100,7 +100,7 @@ The format is like a demented .ini file, and I kind of love that about it, I
 don't know why. Perhaps I shouldn't be allowed to come up with format
 specifications.
 
-# How can I configure it?
+## How can I configure it?
 
 cascade will look for `~/.cascade/cascade.conf` as its configuration file, and
 if it doesn't find it, it will create a default one. If you'd like to change
@@ -114,12 +114,12 @@ settings into the program. To see a list of configurable options, just run
 __NOTE:__ MasterList must be defined if you are not supplying a file via
 command line, so make sure that is set in the config file.
 
-# How do I use it?
+## How do I use it?
 
 There are two modes in cascade: NORMAL, and MOVE. The keybindings are split
 into two sections, one for each mode, found below:
 
-### NORMAL MODE
+#### NORMAL MODE
 
 Key | Action
 ----|-------
@@ -134,7 +134,7 @@ Key | Action
 <kbd>c</kbd> | cycle focused section color
 <kbd>s</kbd> | save any unsaved changes
 
-### MOVE MODE
+#### MOVE MODE
 
 Key | Action
 ----|-------
@@ -147,7 +147,7 @@ Key | Action
 To see a list of keybindings on the command line, just run
 `cascade -h keybindings`
 
-# Now what?
+## Now what?
 
 Use it. Or don't. Fork it. Change it. Send me issues. Do whatever you want,
 send me some nice screenshots of you using it, I don't know.
