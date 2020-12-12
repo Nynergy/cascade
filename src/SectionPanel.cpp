@@ -232,6 +232,8 @@ int SectionPanel::getNumItems() {
 }
 
 void SectionPanel::addItem(std::string newItem) {
+    if(newItem == "") { return; }
+
     section.items.push_back(newItem);
     moveToEndOfItems();
 }
