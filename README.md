@@ -141,6 +141,7 @@ Key | Action
 <kbd>q</kbd> | quit cascade
 <kbd>j</kbd> and <kbd>k</kbd> | move focused item up and down
 <kbd>J</kbd> and <kbd>K</kbd> | move focused section up and down
+<kbd><</kbd> and <kbd>></kbd> | move focused item between sections
 <kbd>m</kbd> | exit MOVE mode
 <kbd>s</kbd> | save any unsaved changes
 
