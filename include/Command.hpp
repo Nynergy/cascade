@@ -207,3 +207,15 @@ public:
     MoveSectionUpCommand(State * state);
     void execute() override;
 };
+
+class ChangeItemSectionUpCommand : public Command {
+public:
+    ChangeItemSectionUpCommand(State * state);
+    void execute() override;
+};
+
+class ChangeItemSectionDownCommand : public Command {
+public:
+    ChangeItemSectionDownCommand(State * state);
+    void execute() override;
+};

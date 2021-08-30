@@ -86,6 +86,12 @@ Command * CommandFactory::getCommandFromKey(int key) {
             case 'k':
                 command = new MoveItemUpCommand(state);
                 break;
+            case '<':
+                command = new ChangeItemSectionUpCommand(state);
+                break;
+            case '>':
+                command = new ChangeItemSectionDownCommand(state);
+                break;
             case 'm':
                 command = new ToggleMoveModeCommand(state);
                 break;

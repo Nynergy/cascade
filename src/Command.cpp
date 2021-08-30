@@ -468,3 +468,49 @@ void MoveSectionUpCommand::execute() {
 
     state->changesMade();
 }
+
+ChangeItemSectionUpCommand::ChangeItemSectionUpCommand(State * state) : Command(state) {}
+
+void ChangeItemSectionUpCommand::execute() {
+    bool enoughItems = checkForNumItems(0);
+    if(!enoughItems) { return; }
+
+    int numPanels = state->getNumPanels();
+    if(numPanels <= 1) { return; }
+
+    SectionPanel * panel = state->getCurrentPanel();
+    std::string item = panel->getCurrentItem();
+    panel->deleteCurrentItem();
+
+    Command * focusUp = new FocusPanelUpCommand(state);
+    focusUp->execute();
+    delete focusUp;
+
+    panel = state->getCurrentPanel();
+    panel->addItem(item);
+
+    state->changesMade();
+}
+
+ChangeItemSectionDownCommand::ChangeItemSectionDownCommand(State * state) : Command(state) {}
+
+void ChangeItemSectionDownCommand::execute() {
+    bool enoughItems = checkForNumItems(0);
+    if(!enoughItems) { return; }
+
+    int numPanels = state->getNumPanels();
+    if(numPanels <= 1) { return; }
+
+    SectionPanel * panel = state->getCurrentPanel();
+    std::string item = panel->getCurrentItem();
+    panel->deleteCurrentItem();
+
+    Command * focusDown = new FocusPanelDownCommand(state);
+    focusDown->execute();
+    delete focusDown;
+
+    panel = state->getCurrentPanel();
+    panel->addItem(item);
+
+    state->changesMade();
+}
